@@ -16,7 +16,7 @@ public class ProductRepository {
     }
 
     public ProductEntity findOneById(Long productId){
-        return productList.stream().filter(p -> p.getProductId() == productId).findFirst().orElse(new ProductEntity());
+        return productList.stream().filter(p -> p.getProductId().equals(productId)).findFirst().orElse(new ProductEntity());
     }
 
     public void save(ProductEntity productEntity){
