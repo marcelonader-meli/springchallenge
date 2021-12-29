@@ -4,12 +4,16 @@ import br.com.meli.springchallenge.entity.ProductEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
 public class ProductRepository {
 
+
+
     private List<ProductEntity> productList = new ArrayList<>();
+
 
     public List<ProductEntity> listAll(){
         return this.productList;
@@ -29,5 +33,10 @@ public class ProductRepository {
 
         this.productList.remove(productEntity);
     }
+
+    public void orderByASC(List<ProductEntity> productList) {
+        Collections.sort(productList);
+    }
+
 
 }
