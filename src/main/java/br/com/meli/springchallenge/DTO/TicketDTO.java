@@ -15,6 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 public class TicketDTO {
 
+    public static int cont =1000;
+
     private Long id;
     private List<ProductEntity>  articles;
     private BigDecimal total;
