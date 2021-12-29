@@ -30,29 +30,25 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<ProductEntity>> listProductsFiltered(
-            @RequestParam(required = false) Integer order,
+//            @RequestParam(required = false) Integer order,
             ProductEntity productEntity
     ){
-        return ResponseEntity.ok(
-                productService.applyFilters(
-                        productEntity,
-                        order
-                ));
+        return ResponseEntity.ok(productService.applyFilters(productEntity));
     }
 
-    @PostMapping("cadastrar")
-    public ResponseEntity<ProductEntity> cadastrarProduto(@RequestBody ProductEntity productEntity){
-        return ResponseEntity.ok(productService.cadastrarProduto(productEntity));
+    @PostMapping("register")
+    public ResponseEntity<ProductEntity> registerProduct(@RequestBody ProductEntity productEntity){
+        return ResponseEntity.ok(productService.registerProduct(productEntity));
     }
 
-//    @PostMapping("/purchase-request")
-//    public ResponseEntity<?> buyProduct(@RequestBody ShoppingCartEntity shoppingCart){
-//        return null;
-//    }
-//
-//    @PostMapping("/insert-articles-request")
-//    public ResponseEntity<?> buyProduct(@RequestBody List<ProductEntity> listProducts) {
-//        return null;
-//    }
+    @PostMapping("/purchase-request")
+    public ResponseEntity<?> buyProduct(@RequestBody ShoppingCartEntity shoppingCart){
+        return null;
+    }
+
+    @PostMapping("/insert-articles-request")
+    public ResponseEntity<?> buyProduct(@RequestBody List<ProductEntity> listProducts) {
+        return null;
+    }
 
 }

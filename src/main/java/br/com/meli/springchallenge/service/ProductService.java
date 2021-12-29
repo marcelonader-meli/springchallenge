@@ -15,10 +15,7 @@ public class ProductService {
     @Autowired
     ProductRepository productRepository;
 
-    public List<ProductEntity> applyFilters(
-            ProductEntity productEntity,
-            Integer order
-    ) {
+    public List<ProductEntity> applyFilters(ProductEntity productEntity) {
 
         List<ProductEntity> listAll = productRepository.listAll();
         List<ProductEntity> listCategoryFiltered = new ArrayList<>();
@@ -71,7 +68,7 @@ public class ProductService {
                 : listAll;
     }
 
-    public ProductEntity cadastrarProduto(ProductEntity productEntity){
+    public ProductEntity registerProduct(ProductEntity productEntity){
        productRepository.save(productEntity);
        return productEntity;
     }
