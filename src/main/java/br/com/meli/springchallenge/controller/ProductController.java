@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("articles")
+@RequestMapping("/articles")
 public class ProductController {
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<?> listAll(){
         return null;
     }
