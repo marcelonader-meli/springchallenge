@@ -22,6 +22,7 @@ public class ProductEntity  implements Comparable<ProductEntity> {
     private Boolean freeShipping;
     private String prestige;
 
+    
     @Override
     public int compareTo(ProductEntity productEntity) {
         return this.name.compareTo(productEntity.getName());

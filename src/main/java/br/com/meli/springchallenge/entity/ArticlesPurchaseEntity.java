@@ -23,4 +23,5 @@ public class ArticlesPurchaseEntity {
         this.quantity = quantity;
     }
 
+
 }

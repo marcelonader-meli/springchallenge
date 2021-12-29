@@ -13,5 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ShoppingCartEntity {
 
+
+
     private List<ArticlesPurchaseEntity> articlesPurchaseRequest;
 }

@@ -1,5 +1,6 @@
 package br.com.meli.springchallenge.repository;
 
+
 import br.com.meli.springchallenge.entity.ProductEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

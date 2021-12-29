@@ -82,6 +82,11 @@ public class ProductService {
         return productRepository.listAll();
     }
 
+    public List<ProductEntity> orderingAscOrder(List<ProductEntity> listProducts) {
+        productRepository.orderByASC(listProducts);
+        return listProducts;
+    }
+
     public TicketDTO buyProduct(ShoppingCartEntity shoppingCart) throws Exception {
 
         List<ProductEntity> productEntities = new ArrayList<>();

@@ -8,13 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOError;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
 @RequestMapping("/articles")
-public class ProductController {
+public class ProductController<ProductEntity> {
 
 
     @Autowired
@@ -29,6 +30,12 @@ public class ProductController {
 //    public ResponseEntity<?> listProductByCategory(@RequestParam String category){
 //        return null;
 //    }
+
+    @GetMapping
+    public ResponseEntity<List<ProductEntity>> listProductsOrdered(
+            @RequestParam Integer order) throws IOException {
+        return ResponseEntity.ok(productService.orderingAscOrder(productEntity));
+    }
 
     @GetMapping
     public ResponseEntity<List<ProductEntity>> listProductsFiltered(
