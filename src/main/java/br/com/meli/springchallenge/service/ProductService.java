@@ -82,7 +82,7 @@ public class ProductService {
         return productRepository.listAll();
     }
 
-    public TicketDTO buyProduct(ShoppingCartEntity shoppingCart) throws Exception {
+    public TicketDTO buyProduct( ShoppingCartEntity shoppingCart) throws Exception {
 
         List<ProductEntity> productEntities = new ArrayList<>();
         TicketDTO ticketDTO;
@@ -94,7 +94,7 @@ public class ProductService {
 
             if(productEntity.getQuantity() >= articlesPurchaseEntity.getQuantity()){
 
-                total.add(productEntity.getPrice()) ;
+                total=total.add(productEntity.getPrice().multiply(new BigDecimal(articlesPurchaseEntity.getQuantity())));
 
                 productEntities.add(
                               ProductEntity.builder()
@@ -113,7 +113,7 @@ public class ProductService {
             }
         }
 
-        return TicketDTO.builder().articles(productEntities).total(total).id(10L).build();
+        return TicketDTO.builder().articles(productEntities).total(total).id((long) TicketDTO.cont++).build();
 
     }
 }
