@@ -1,6 +1,5 @@
 package br.com.meli.springchallenge.controller;
 
-import br.com.meli.springchallenge.DTO.TicketDTO;
 import br.com.meli.springchallenge.entity.ProductEntity;
 import br.com.meli.springchallenge.entity.ShoppingCartEntity;
 import br.com.meli.springchallenge.service.ProductService;
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -16,11 +16,12 @@ import java.util.List;
 @RequestMapping("/articles")
 public class ProductController {
 
+
     @Autowired
     ProductService productService;
 
     @GetMapping("/")
-    public ResponseEntity<List<ProductEntity>> listAll(){
+    public ResponseEntity<List<ProductEntity>> listAll() throws IOException {
         return ResponseEntity.ok(productService.listAll());
     }
 //
@@ -33,18 +34,18 @@ public class ProductController {
     public ResponseEntity<List<ProductEntity>> listProductsFiltered(
 //            @RequestParam(required = false) Integer order,
             ProductEntity productEntity
-    ){
+    ) throws IOException {
         return ResponseEntity.ok(productService.applyFilters(productEntity));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ProductEntity> registerProduct(@RequestBody ProductEntity productEntity){
+    public ResponseEntity<ProductEntity> registerProduct(@RequestBody ProductEntity productEntity) throws IOException {
         return ResponseEntity.ok(productService.registerProduct(productEntity));
     }
 
     @PostMapping("/purchase-request")
-    public ResponseEntity<TicketDTO> buyProduct(@RequestBody ShoppingCartEntity shoppingCart) throws Exception {
-        return ResponseEntity.ok(productService.buyProduct(shoppingCart));
+    public ResponseEntity<?> buyProduct(@RequestBody ShoppingCartEntity shoppingCart){
+        return null;
     }
 
     @PostMapping("/insert-articles-request")

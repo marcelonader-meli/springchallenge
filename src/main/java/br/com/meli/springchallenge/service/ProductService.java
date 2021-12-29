@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,7 +20,7 @@ public class ProductService {
     @Autowired
     ProductRepository productRepository;
 
-    public List<ProductEntity> applyFilters(ProductEntity productEntity) {
+    public List<ProductEntity> applyFilters(ProductEntity productEntity) throws IOException {
 
         List<ProductEntity> listAll = productRepository.listAll();
         List<ProductEntity> listCategoryFiltered = new ArrayList<>();
@@ -72,12 +73,12 @@ public class ProductService {
                 : listAll;
     }
 
-    public ProductEntity registerProduct(ProductEntity productEntity){
+    public ProductEntity registerProduct(ProductEntity productEntity) throws IOException {
        productRepository.save(productEntity);
        return productEntity;
     }
 
-    public List<ProductEntity> listAll(){
+    public List<ProductEntity> listAll() throws IOException {
         return productRepository.listAll();
     }
 
@@ -91,10 +92,9 @@ public class ProductService {
 
             ProductEntity productEntity = productRepository.findOneById(articlesPurchaseEntity.getProductId());
 
-
             if(productEntity.getQuantity() >= articlesPurchaseEntity.getQuantity()){
 
-                total.add(productEntity.getPrice());
+                total.add(productEntity.getPrice()) ;
 
                 productEntities.add(
                               ProductEntity.builder()
@@ -109,7 +109,7 @@ public class ProductService {
                              .build()
                 );
             }else{
-                throw  new Exception("Quantidade do item " + productEntity.getName() + "Nao disponivel");
+                throw  new Exception("Quantidade do item " + productEntity.getName() + " Nao disponivel");
             }
         }
 
