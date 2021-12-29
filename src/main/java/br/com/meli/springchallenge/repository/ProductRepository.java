@@ -10,11 +10,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+
 import java.util.Arrays;
+import java.util.Collections;
+
 import java.util.List;
 
 @Repository
 public class ProductRepository {
+
+
 
     private List<ProductEntity> productList = new ArrayList<>();
     private ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
@@ -22,6 +27,7 @@ public class ProductRepository {
 
     public List<ProductEntity> listAll() throws IOException {
         return Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
+
     }
 
     public ProductEntity findOneById(Long productId) throws IOException {
@@ -43,4 +49,12 @@ public class ProductRepository {
         mapper.writeValue(new File(PATH), productListAll);
     }
 
+
+
+    public void orderByASC(List<ProductEntity> productList) {
+        Collections.sort(productList);
+    }
+
+
 }
+
