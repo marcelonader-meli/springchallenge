@@ -34,22 +34,4 @@
   "quantity" : 6,
   "freeShipping" : true,
   "prestige" : "*****"
-}, {
-  "productId" : 5,
-  "name" : "Mini Cama elastica",
-  "category" : "Esportes",
-  "brand" : "Starboard",
-  "price" : 183.00,
-  "quantity" : 4,
-  "freeShipping" : true,
-  "prestige" : "*****"
-}, {
-  "productId" : 6,
-  "name" : "Camiseta",
-  "category" : "Esportes",
-  "brand" : "Topper",
-  "price" : 80.00,
-  "quantity" : 2,
-  "freeShipping" : false,
-  "prestige" : "***"
 } ]

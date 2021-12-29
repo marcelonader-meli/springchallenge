@@ -19,8 +19,6 @@ import java.util.List;
 @Repository
 public class ProductRepository {
 
-
-
     private List<ProductEntity> productList = new ArrayList<>();
     private ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     private final String PATH = "products.json";
