@@ -2,28 +2,45 @@ package br.com.meli.springchallenge.controller;
 
 import br.com.meli.springchallenge.entity.ProductEntity;
 import br.com.meli.springchallenge.entity.ShoppingCartEntity;
+import br.com.meli.springchallenge.service.ProductService;
+import org.apache.coyote.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
-@RequestMapping("articles")
+@RequestMapping("/articles")
 public class ProductController {
 
-    @GetMapping
-    public ResponseEntity<?> listAll(){
-        return null;
+
+    @Autowired
+    ProductService productService;
+
+    @GetMapping("/")
+    public ResponseEntity<List<ProductEntity>> listAll() throws IOException {
+        return ResponseEntity.ok(productService.listAll());
     }
+//
+//    @GetMapping
+//    public ResponseEntity<?> listProductByCategory(@RequestParam String category){
+//        return null;
+//    }
 
     @GetMapping
-    public ResponseEntity<?> listProductByCategory(@RequestParam String category){
-        return null;
+    public ResponseEntity<List<ProductEntity>> listProductsFiltered(
+//            @RequestParam(required = false) Integer order,
+            ProductEntity productEntity
+    ) throws IOException {
+        return ResponseEntity.ok(productService.applyFilters(productEntity));
     }
 
-    @GetMapping
-    public ResponseEntity<?> listProductsFiltered(@RequestParam String category, @RequestParam Boolean freeShipping, @RequestParam String brand, @RequestParam Double price, @RequestParam String prestige, @RequestParam Integer order){
-        return null;
+    @PostMapping("/register")
+    public ResponseEntity<ProductEntity> registerProduct(@RequestBody ProductEntity productEntity) throws IOException {
+        return ResponseEntity.ok(productService.registerProduct(productEntity));
     }
 
     @PostMapping("/purchase-request")
