@@ -1,8 +1,12 @@
 package br.com.meli.springchallenge.service;
 
+import br.com.meli.springchallenge.DTO.TicketDTO;
+import br.com.meli.springchallenge.entity.ArticlesPurchaseEntity;
 import br.com.meli.springchallenge.entity.ProductEntity;
+import br.com.meli.springchallenge.entity.ShoppingCartEntity;
 import br.com.meli.springchallenge.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -76,5 +80,40 @@ public class ProductService {
 
     public List<ProductEntity> listAll() throws IOException {
         return productRepository.listAll();
+    }
+
+    public TicketDTO buyProduct(ShoppingCartEntity shoppingCart) throws Exception {
+
+        List<ProductEntity> productEntities = new ArrayList<>();
+        TicketDTO ticketDTO;
+        BigDecimal total = new BigDecimal(0);
+
+        for(ArticlesPurchaseEntity articlesPurchaseEntity : shoppingCart.getArticlesPurchaseRequest()){
+
+            ProductEntity productEntity = productRepository.findOneById(articlesPurchaseEntity.getProductId());
+
+            if(productEntity.getQuantity() >= articlesPurchaseEntity.getQuantity()){
+
+                total.add(productEntity.getPrice()) ;
+
+                productEntities.add(
+                              ProductEntity.builder()
+                             .productId(productEntity.getProductId())
+                             .name(productEntity.getName())
+                             .category(productEntity.getCategory())
+                             .brand(productEntity.getBrand())
+                             .price(productEntity.getPrice())
+                             .quantity(articlesPurchaseEntity.getQuantity())
+                             .freeShipping(productEntity.getFreeShipping())
+                             .prestige(productEntity.getPrestige())
+                             .build()
+                );
+            }else{
+                throw  new Exception("Quantidade do item " + productEntity.getName() + " Nao disponivel");
+            }
+        }
+
+        return TicketDTO.builder().articles(productEntities).total(total).id(10L).build();
+
     }
 }
