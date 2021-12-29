@@ -5,6 +5,7 @@ import br.com.meli.springchallenge.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,7 +16,7 @@ public class ProductService {
     @Autowired
     ProductRepository productRepository;
 
-    public List<ProductEntity> applyFilters(ProductEntity productEntity) {
+    public List<ProductEntity> applyFilters(ProductEntity productEntity) throws IOException {
 
         List<ProductEntity> listAll = productRepository.listAll();
         List<ProductEntity> listCategoryFiltered = new ArrayList<>();
@@ -68,12 +69,12 @@ public class ProductService {
                 : listAll;
     }
 
-    public ProductEntity registerProduct(ProductEntity productEntity){
+    public ProductEntity registerProduct(ProductEntity productEntity) throws IOException {
        productRepository.save(productEntity);
        return productEntity;
     }
 
-    public List<ProductEntity> listAll(){
+    public List<ProductEntity> listAll() throws IOException {
         return productRepository.listAll();
     }
 }
