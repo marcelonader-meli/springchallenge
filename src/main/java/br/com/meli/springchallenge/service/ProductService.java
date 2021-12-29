@@ -113,7 +113,7 @@ public class ProductService {
             }
         }
 
-        return TicketDTO.builder().articles(productEntities).total(total).id((long) TicketDTO.cont++).build();
+        return TicketDTO.builder().articles(productEntities).total(total).id(TicketDTO.getCont()).build();
 
     }
 }
