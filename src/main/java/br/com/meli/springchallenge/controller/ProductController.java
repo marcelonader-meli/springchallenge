@@ -2,38 +2,57 @@ package br.com.meli.springchallenge.controller;
 
 import br.com.meli.springchallenge.entity.ProductEntity;
 import br.com.meli.springchallenge.entity.ShoppingCartEntity;
+import br.com.meli.springchallenge.service.ProductService;
+import org.apache.coyote.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
-@RequestMapping("articles")
+@RequestMapping("/articles")
 public class ProductController {
 
-    @GetMapping
-    public ResponseEntity<?> listAll(){
-        return null;
+    @Autowired
+    ProductService productService;
+
+    @GetMapping("/")
+    public ResponseEntity<List<ProductEntity>> listAll(){
+        return ResponseEntity.ok(productService.listAll());
     }
+//
+//    @GetMapping
+//    public ResponseEntity<?> listProductByCategory(@RequestParam String category){
+//        return null;
+//    }
 
     @GetMapping
-    public ResponseEntity<?> listProductByCategory(@RequestParam String category){
-        return null;
+    public ResponseEntity<List<ProductEntity>> listProductsFiltered(
+            @RequestParam(required = false) Integer order,
+            ProductEntity productEntity
+    ){
+        return ResponseEntity.ok(
+                productService.applyFilters(
+                        productEntity,
+                        order
+                ));
     }
 
-    @GetMapping
-    public ResponseEntity<?> listProductsFiltered(@RequestParam String category, @RequestParam Boolean freeShipping, @RequestParam String brand, @RequestParam Double price, @RequestParam String prestige, @RequestParam Integer order){
-        return null;
+    @PostMapping("cadastrar")
+    public ResponseEntity<ProductEntity> cadastrarProduto(@RequestBody ProductEntity productEntity){
+        return ResponseEntity.ok(productService.cadastrarProduto(productEntity));
     }
 
-    @PostMapping("/purchase-request")
-    public ResponseEntity<?> buyProduct(@RequestBody ShoppingCartEntity shoppingCart){
-        return null;
-    }
-
-    @PostMapping("/insert-articles-request")
-    public ResponseEntity<?> buyProduct(@RequestBody List<ProductEntity> listProducts) {
-        return null;
-    }
+//    @PostMapping("/purchase-request")
+//    public ResponseEntity<?> buyProduct(@RequestBody ShoppingCartEntity shoppingCart){
+//        return null;
+//    }
+//
+//    @PostMapping("/insert-articles-request")
+//    public ResponseEntity<?> buyProduct(@RequestBody List<ProductEntity> listProducts) {
+//        return null;
+//    }
 
 }
