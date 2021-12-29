@@ -20,7 +20,7 @@ public class ProductEntity  implements Comparable<ProductEntity> {
     private BigDecimal price;
     private Integer quantity;
     private Boolean freeShipping;
-    private String pretige;
+    private String prestige;
 
     @Override
     public int compareTo(ProductEntity productEntity) {

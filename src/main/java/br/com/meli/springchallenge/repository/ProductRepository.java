@@ -23,8 +23,9 @@ public class ProductRepository {
         return productList.stream().filter(p -> p.getProductId().equals(productId)).findFirst().orElse(new ProductEntity());
     }
 
-    public void save(ProductEntity productEntity){
+    public ProductEntity save(ProductEntity productEntity){
         this.productList.add(productEntity);
+       return productEntity;
     }
 
     public void removeById(Long productId){
