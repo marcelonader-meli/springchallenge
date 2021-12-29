@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping("/")
-    public ResponseEntity<List<ProductEntity>> listAll(){
+    public ResponseEntity<List<ProductEntity>> listAll() throws IOException {
         return ResponseEntity.ok(productService.listAll());
     }
 //
@@ -32,12 +33,12 @@ public class ProductController {
     public ResponseEntity<List<ProductEntity>> listProductsFiltered(
 //            @RequestParam(required = false) Integer order,
             ProductEntity productEntity
-    ){
+    ) throws IOException {
         return ResponseEntity.ok(productService.applyFilters(productEntity));
     }
 
     @PostMapping("register")
-    public ResponseEntity<ProductEntity> registerProduct(@RequestBody ProductEntity productEntity){
+    public ResponseEntity<ProductEntity> registerProduct(@RequestBody ProductEntity productEntity) throws IOException {
         return ResponseEntity.ok(productService.registerProduct(productEntity));
     }
 
