@@ -1,5 +1,6 @@
 package br.com.meli.springchallenge.controller;
 
+import br.com.meli.springchallenge.DTO.TicketDTO;
 import br.com.meli.springchallenge.entity.ProductEntity;
 import br.com.meli.springchallenge.entity.ShoppingCartEntity;
 import br.com.meli.springchallenge.service.ProductService;
@@ -36,14 +37,14 @@ public class ProductController {
         return ResponseEntity.ok(productService.applyFilters(productEntity));
     }
 
-    @PostMapping("register")
+    @PostMapping("/register")
     public ResponseEntity<ProductEntity> registerProduct(@RequestBody ProductEntity productEntity){
         return ResponseEntity.ok(productService.registerProduct(productEntity));
     }
 
     @PostMapping("/purchase-request")
-    public ResponseEntity<?> buyProduct(@RequestBody ShoppingCartEntity shoppingCart){
-        return null;
+    public ResponseEntity<TicketDTO> buyProduct(@RequestBody ShoppingCartEntity shoppingCart) throws Exception {
+        return ResponseEntity.ok(productService.buyProduct(shoppingCart));
     }
 
     @PostMapping("/insert-articles-request")
