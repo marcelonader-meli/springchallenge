@@ -38,7 +38,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.applyFilters(productEntity));
     }
 
-    @PostMapping("register")
+    @PostMapping("/register")
     public ResponseEntity<ProductEntity> registerProduct(@RequestBody ProductEntity productEntity) throws IOException {
         return ResponseEntity.ok(productService.registerProduct(productEntity));
     }

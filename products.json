@@ -7,49 +7,4 @@
   "quantity" : 5,
   "freeShipping" : true,
   "prestige" : "****"
-}, {
-  "productId" : 2,
-  "name" : "Furadeira",
-  "category" : "Ferramentas",
-  "brand" : "Black & Decker",
-  "price" : 500.00,
-  "quantity" : 7,
-  "freeShipping" : true,
-  "prestige" : "****"
-}, {
-  "productId" : 3,
-  "name" : "Soldadora",
-  "category" : "Ferramentas",
-  "brand" : "Black & Decker",
-  "price" : 350.00,
-  "quantity" : 10,
-  "freeShipping" : true,
-  "prestige" : "***"
-}, {
-  "productId" : 4,
-  "name" : "Chuteira",
-  "category" : "Esportes",
-  "brand" : "Adidas",
-  "price" : 235.00,
-  "quantity" : 6,
-  "freeShipping" : true,
-  "prestige" : "*****"
-}, {
-  "productId" : 5,
-  "name" : "Mini Cama elastica",
-  "category" : "Esportes",
-  "brand" : "Starboard",
-  "price" : 183.00,
-  "quantity" : 4,
-  "freeShipping" : true,
-  "prestige" : "*****"
-}, {
-  "productId" : 6,
-  "name" : "Camiseta",
-  "category" : "Esportes",
-  "brand" : "Topper",
-  "price" : 80.00,
-  "quantity" : 2,
-  "freeShipping" : false,
-  "prestige" : "***"
 } ]

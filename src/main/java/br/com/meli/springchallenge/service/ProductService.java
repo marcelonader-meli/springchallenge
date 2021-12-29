@@ -92,10 +92,9 @@ public class ProductService {
 
             ProductEntity productEntity = productRepository.findOneById(articlesPurchaseEntity.getProductId());
 
-
             if(productEntity.getQuantity() >= articlesPurchaseEntity.getQuantity()){
 
-                total.add(productEntity.getPrice());
+                total.add(productEntity.getPrice()) ;
 
                 productEntities.add(
                               ProductEntity.builder()
@@ -110,7 +109,7 @@ public class ProductService {
                              .build()
                 );
             }else{
-                throw  new Exception("Quantidade do item " + productEntity.getName() + "Nao disponivel");
+                throw  new Exception("Quantidade do item " + productEntity.getName() + " Nao disponivel");
             }
         }
 
