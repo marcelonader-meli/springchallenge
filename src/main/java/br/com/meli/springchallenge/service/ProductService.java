@@ -1,5 +1,6 @@
 package br.com.meli.springchallenge.service;
 
+import br.com.meli.springchallenge.DTO.ProductCreateDTO;
 import br.com.meli.springchallenge.DTO.TicketDTO;
 import br.com.meli.springchallenge.entity.ArticlesPurchaseEntity;
 import br.com.meli.springchallenge.entity.ProductEntity;
@@ -138,44 +139,82 @@ public class ProductService {
 
         List<ProductEntity> productEntities = new ArrayList<>();
         TicketDTO ticketDTO;
+        StringBuilder observacoes = new StringBuilder("");
         BigDecimal total = new BigDecimal(0);
 
         for(ArticlesPurchaseEntity articlesPurchaseEntity : shoppingCart.getArticlesPurchaseRequest()){
 
             ProductEntity productEntity = productRepository.findOneById(articlesPurchaseEntity.getProductId());
 
-            if(productEntity.getQuantity() >= articlesPurchaseEntity.getQuantity()){
+            if(productEntity.getProductId()!=null){
 
-                total=total.add(productEntity.getPrice().multiply(new BigDecimal(articlesPurchaseEntity.getQuantity())));
+                if(productEntity.getQuantity() >= articlesPurchaseEntity.getQuantity()){
 
-                productEntities.add(
-                              ProductEntity.builder()
-                             .productId(productEntity.getProductId())
-                             .name(productEntity.getName())
-                             .category(productEntity.getCategory())
-                             .brand(productEntity.getBrand())
-                             .price(productEntity.getPrice())
-                             .quantity(articlesPurchaseEntity.getQuantity())
-                             .freeShipping(productEntity.getFreeShipping())
-                             .prestige(productEntity.getPrestige())
-                             .build()
-                );
+                    total=total.add(productEntity.getPrice().multiply(new BigDecimal(articlesPurchaseEntity.getQuantity())));
+                    updateEstoque(articlesPurchaseEntity);
+                    productEntities.add(
+                            ProductEntity.builder()
+                                    .productId(productEntity.getProductId())
+                                    .name(productEntity.getName())
+                                    .category(productEntity.getCategory())
+                                    .brand(productEntity.getBrand())
+                                    .price(productEntity.getPrice())
+                                    .quantity(articlesPurchaseEntity.getQuantity())
+                                    .freeShipping(productEntity.getFreeShipping())
+                                    .prestige(productEntity.getPrestige())
+                                    .build()
+                    );
+                }else{
+                    observacoes.append("Quantidade do item " + productEntity.getName() + " Nao disponivel | ");
+                }
             }else{
-                throw  new Exception("Quantidade do item " + productEntity.getName() + " Nao disponivel");
+                observacoes.append("Produto" + articlesPurchaseEntity.getName() + "nao existente");
             }
         }
 
-        return TicketDTO.builder().articles(productEntities).total(total).id(TicketDTO.getCont()).build();
+        if(observacoes.equals("")){
+            throw new Exception(" Não foi possivel adicionar todos os itens ao carrinho, verifique as observacoes no ticket");
+        }
 
+        return TicketDTO.builder()
+                .articles(productEntities)
+                .total(total)
+                .id(TicketDTO.getCont())
+                .observacoes(observacoes.toString())
+                .build();
     }
 
-    public List<ProductEntity> saveProducts(List<ProductEntity> products) throws IOException {
+    public List<ProductCreateDTO> saveProducts(List<ProductEntity> products) throws IOException {
         productRepository.saveAll(products);
-        return products;
+        List<ProductCreateDTO> productCreateDTOList = new ArrayList<>();
+
+        for (ProductEntity product : products) {
+            ProductCreateDTO productCreateDTO = new ProductCreateDTO(product.getProductId(), product.getName(), product.getQuantity());
+            productCreateDTOList.add(productCreateDTO);
+        }
+        return productCreateDTOList;
     }
 
-    public List<ProductEntity> orderingAscOrder(List<ProductEntity> listProducts) {
-        productRepository.orderByASC(listProducts);
-        return listProducts;
+    public List<ProductEntity> orderProducts(Integer order) throws IOException {
+        if(order == 0) {
+            return productRepository.sortByAscName();
+        } else if(order == 1) {
+            return productRepository.sortByDescName();
+        } else if(order == 2) {
+            return productRepository.orderByTheHighestPrice();
+        } else if(order == 3) {
+            return  productRepository.orderByLowestPrice();
+        }
+
+        return null;
+    }
+
+    public void updateEstoque(ArticlesPurchaseEntity articlesPurchaseEntity) throws IOException {
+
+        ProductEntity p = productRepository.findOneById(articlesPurchaseEntity.getProductId());
+        p.setQuantity(p.getQuantity() - articlesPurchaseEntity.getQuantity());
+
+        productRepository.save(p);
+
     }
 }

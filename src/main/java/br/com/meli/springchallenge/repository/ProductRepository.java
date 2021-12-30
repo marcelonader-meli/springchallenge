@@ -31,25 +31,33 @@ public class ProductRepository {
     }
 
     public ProductEntity findOneById(Long productId) throws IOException {
-        return Arrays.stream(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class)).filter(p -> p.getProductId().equals(productId)).findFirst().orElse(new ProductEntity());
+        return Arrays.stream(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class))
+                .filter(p -> p.getProductId().equals(productId)).findFirst().orElse(new ProductEntity());
     }
 
     public void save(ProductEntity productEntity) throws IOException {
-//        productEntity.setProductId((long) productList.size()+1);
-        productList.add(productEntity);
+
+        if(productEntity.getProductId()!=null){
+            for(ProductEntity p : productList){
+                if(p.getProductId()==productEntity.getProductId()){
+                    p.setQuantity(productEntity.getQuantity());
+                }
+            }
+        }else{
+            productEntity.setProductId((long) productList.size()+1);
+            productList.add(productEntity);
+        }
+
         mapper.writeValue(new File(PATH), productList);
     }
 
     public void saveAll(List<ProductEntity> products) throws IOException {
-        //fazer um foreach e no id inserir o productList.size() + o counter
         Integer counter = 1;
         long lastId = productList.stream().mapToLong(item -> item.getProductId()).max().orElse(0);
         for (ProductEntity product : products) {
-            product.setProductId(lastId + counter);
-            counter++;
+            product.setProductId(lastId + counter++);
+            productList.add(product);
         }
-
-        productList.addAll(products);
         mapper.writeValue(new File(PATH), productList);
     }
 
@@ -61,12 +69,31 @@ public class ProductRepository {
         mapper.writeValue(new File(PATH), productListAll);
     }
 
+    public List<ProductEntity> sortByAscName() throws IOException{
+        List<ProductEntity> listProducts = Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
+        Collections.sort(listProducts, (a, b) -> a.getName().compareTo(b.getName()));
+        return listProducts;
 
+    }
 
-    public void orderByASC(List<ProductEntity> productList) {
-        Collections.sort(productList);
+    public List<ProductEntity> sortByDescName() throws IOException{
+        List<ProductEntity> listProducts = Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
+        Collections.sort(listProducts, (a, b) -> b.getName().compareTo(a.getName()));
+        return listProducts;
+
+    }
+
+    public List<ProductEntity> orderByLowestPrice() throws IOException {
+        List<ProductEntity> listProducts = Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
+        Collections.sort(listProducts, (a, b) -> a.getPrice().compareTo(b.getPrice()));
+        return listProducts;
     }
 
 
+    public List<ProductEntity> orderByTheHighestPrice() throws IOException {
+        List<ProductEntity> listProducts = Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
+        Collections.sort(listProducts, (a, b) -> b.getPrice().compareTo(a.getPrice()));
+        return listProducts;
+    }
 }
 

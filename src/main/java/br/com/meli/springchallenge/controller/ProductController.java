@@ -1,5 +1,6 @@
 package br.com.meli.springchallenge.controller;
 
+import br.com.meli.springchallenge.DTO.ProductCreateDTO;
 import br.com.meli.springchallenge.DTO.TicketDTO;
 import br.com.meli.springchallenge.entity.ProductEntity;
 import br.com.meli.springchallenge.entity.ShoppingCartEntity;
@@ -34,12 +35,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.applyFilters(productEntity));
     }
 
-    //erro ao chamar o productEntity na linha 45
-    @GetMapping(value = "/mudar-rota")
-    public ResponseEntity<List<ProductEntity>> listProductsOrdered(@RequestParam Integer order) throws IOException {
-        //return ResponseEntity.ok(productService.orderingAscOrder(productEntity));
-        return null;
+    @GetMapping("/order{order}")
+    public ResponseEntity<List<ProductEntity>> listOrderedProducts(@RequestParam(required = false) Integer order) throws IOException {
+        return ResponseEntity.ok(productService.orderProducts(order));
     }
+
 
     @PostMapping("/register")
     public ResponseEntity<ProductEntity> registerProduct(@RequestBody ProductEntity productEntity) throws IOException {
@@ -52,7 +52,7 @@ public class ProductController {
     }
 
     @PostMapping("/insert-articles-request")
-    public ResponseEntity<List<ProductEntity>> saveProducts(@RequestBody List<ProductEntity> listProducts) {
+    public ResponseEntity<List<ProductCreateDTO>> saveProducts(@RequestBody List<ProductEntity> listProducts) {
         try {
             return ResponseEntity.ok().body(productService.saveProducts(listProducts));
         }catch (Exception e ){
