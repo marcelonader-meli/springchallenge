@@ -19,6 +19,8 @@ import java.util.List;
 @Repository
 public class ProductRepository {
 
+
+
     private List<ProductEntity> productList = new ArrayList<>();
     private ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     private final String PATH = "products.json";
@@ -45,6 +47,7 @@ public class ProductRepository {
         long lastId = productList.stream().mapToLong(item -> item.getProductId()).max().orElse(0);
         for (ProductEntity product : products) {
             product.setProductId(lastId + counter);
+            counter++;
         }
 
         productList.addAll(products);

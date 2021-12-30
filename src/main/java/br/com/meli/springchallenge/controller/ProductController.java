@@ -16,11 +16,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/articles")
 public class ProductController {
-    @Autowired
-    private ProductService productService;
 
-    @GetMapping(value = "/")
-    public ResponseEntity<List<ProductEntity>> findAll() throws IOException {
+
+    @Autowired
+    ProductService productService;
+
+    @GetMapping("/")
+    public ResponseEntity<List<ProductEntity>> listAll() throws IOException {
         return ResponseEntity.ok(productService.listAll());
     }
 //
@@ -37,6 +39,13 @@ public class ProductController {
         return ResponseEntity.ok(productService.applyFilters(productEntity));
     }
 
+    //erro ao chamar o productEntity na linha 45
+    @GetMapping(value = "/mudar-rota")
+    public ResponseEntity<List<ProductEntity>> listProductsOrdered(@RequestParam Integer order) throws IOException {
+        //return ResponseEntity.ok(productService.orderingAscOrder(productEntity));
+        return null;
+    }
+
     @PostMapping("/register")
     public ResponseEntity<ProductEntity> registerProduct(@RequestBody ProductEntity productEntity) throws IOException {
         return ResponseEntity.ok(productService.registerProduct(productEntity));
@@ -48,7 +57,7 @@ public class ProductController {
     }
 
     @PostMapping("/insert-articles-request")
-    public ResponseEntity<List<ProductEntity>> saveProduct(@RequestBody List<ProductEntity> listProducts) {
+    public ResponseEntity<List<ProductEntity>> saveProducts(@RequestBody List<ProductEntity> listProducts) {
         try {
             return ResponseEntity.ok().body(productService.saveProducts(listProducts));
         }catch (Exception e ){
