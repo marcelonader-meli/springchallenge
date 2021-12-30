@@ -1,12 +1,12 @@
 package br.com.meli.springchallenge.service;
 
+import br.com.meli.springchallenge.DTO.ProductCreateDTO;
 import br.com.meli.springchallenge.DTO.TicketDTO;
 import br.com.meli.springchallenge.entity.ArticlesPurchaseEntity;
 import br.com.meli.springchallenge.entity.ProductEntity;
 import br.com.meli.springchallenge.entity.ShoppingCartEntity;
 import br.com.meli.springchallenge.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -173,9 +173,15 @@ public class ProductService {
 
     }
 
-    public List<ProductEntity> saveProducts(List<ProductEntity> products) throws IOException {
+    public List<ProductCreateDTO> saveProducts(List<ProductEntity> products) throws IOException {
         productRepository.saveAll(products);
-        return products;
+        List<ProductCreateDTO> productCreateDTOList = new ArrayList<>();
+
+        for (ProductEntity product : products) {
+            ProductCreateDTO productCreateDTO = new ProductCreateDTO(product.getProductId(), product.getName(), product.getQuantity());
+            productCreateDTOList.add(productCreateDTO);
+        }
+        return productCreateDTOList;
     }
 
     public List<ProductEntity> orderingAscOrder(List<ProductEntity> listProducts) {

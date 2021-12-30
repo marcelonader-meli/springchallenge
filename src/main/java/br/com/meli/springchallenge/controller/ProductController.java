@@ -1,16 +1,15 @@
 package br.com.meli.springchallenge.controller;
 
+import br.com.meli.springchallenge.DTO.ProductCreateDTO;
 import br.com.meli.springchallenge.DTO.TicketDTO;
 import br.com.meli.springchallenge.entity.ProductEntity;
 import br.com.meli.springchallenge.entity.ShoppingCartEntity;
 import br.com.meli.springchallenge.service.ProductService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -57,7 +56,7 @@ public class ProductController {
     }
 
     @PostMapping("/insert-articles-request")
-    public ResponseEntity<List<ProductEntity>> saveProducts(@RequestBody List<ProductEntity> listProducts) {
+    public ResponseEntity<List<ProductCreateDTO>> saveProducts(@RequestBody List<ProductEntity> listProducts) {
         try {
             return ResponseEntity.ok().body(productService.saveProducts(listProducts));
         }catch (Exception e ){

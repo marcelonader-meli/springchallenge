@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -41,15 +40,12 @@ public class ProductRepository {
     }
 
     public void saveAll(List<ProductEntity> products) throws IOException {
-        //fazer um foreach e no id inserir o productList.size() + o counter
         Integer counter = 1;
         long lastId = productList.stream().mapToLong(item -> item.getProductId()).max().orElse(0);
         for (ProductEntity product : products) {
-            product.setProductId(lastId + counter);
-            counter++;
+            product.setProductId(lastId + counter++);
+            productList.add(product);
         }
-
-        productList.addAll(products);
         mapper.writeValue(new File(PATH), productList);
     }
 
