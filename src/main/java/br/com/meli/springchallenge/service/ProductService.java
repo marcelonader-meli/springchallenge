@@ -142,35 +142,49 @@ public class ProductService {
 
         List<ProductEntity> productEntities = new ArrayList<>();
         TicketDTO ticketDTO;
+        StringBuilder observacoes = null;
         BigDecimal total = new BigDecimal(0);
 
         for(ArticlesPurchaseEntity articlesPurchaseEntity : shoppingCart.getArticlesPurchaseRequest()){
 
             ProductEntity productEntity = productRepository.findOneById(articlesPurchaseEntity.getProductId());
 
-            if(productEntity.getQuantity() >= articlesPurchaseEntity.getQuantity()){
+            if(productEntity.getProductId()!=null){
 
-                total=total.add(productEntity.getPrice().multiply(new BigDecimal(articlesPurchaseEntity.getQuantity())));
+                if(productEntity.getQuantity() >= articlesPurchaseEntity.getQuantity()){
 
-                productEntities.add(
-                              ProductEntity.builder()
-                             .productId(productEntity.getProductId())
-                             .name(productEntity.getName())
-                             .category(productEntity.getCategory())
-                             .brand(productEntity.getBrand())
-                             .price(productEntity.getPrice())
-                             .quantity(articlesPurchaseEntity.getQuantity())
-                             .freeShipping(productEntity.getFreeShipping())
-                             .prestige(productEntity.getPrestige())
-                             .build()
-                );
+                    total=total.add(productEntity.getPrice().multiply(new BigDecimal(articlesPurchaseEntity.getQuantity())));
+                    updateEstoque(articlesPurchaseEntity);
+                    productEntities.add(
+                            ProductEntity.builder()
+                                    .productId(productEntity.getProductId())
+                                    .name(productEntity.getName())
+                                    .category(productEntity.getCategory())
+                                    .brand(productEntity.getBrand())
+                                    .price(productEntity.getPrice())
+                                    .quantity(articlesPurchaseEntity.getQuantity())
+                                    .freeShipping(productEntity.getFreeShipping())
+                                    .prestige(productEntity.getPrestige())
+                                    .build()
+                    );
+                }else{
+                    observacoes.append("Quantidade do item " + productEntity.getName() + " Nao disponivel\n");
+                }
             }else{
-                throw  new Exception("Quantidade do item " + productEntity.getName() + " Nao disponivel");
+                observacoes.append("Produto" + articlesPurchaseEntity.getName() + "nao existente");
             }
         }
 
-        return TicketDTO.builder().articles(productEntities).total(total).id(TicketDTO.getCont()).build();
+        if(observacoes!= null){
+            throw new Exception(" Não foi possivel adicionar todos os itens ao carrinho, verifique as observacoes no ticket");
+        }
 
+        return TicketDTO.builder()
+                .articles(productEntities)
+                .total(total)
+                .id(TicketDTO.getCont())
+                .observacoes(observacoes.toString())
+                .build();
     }
 
     public List<ProductCreateDTO> saveProducts(List<ProductEntity> products) throws IOException {
@@ -187,5 +201,14 @@ public class ProductService {
     public List<ProductEntity> orderingAscOrder(List<ProductEntity> listProducts) {
         productRepository.orderByASC(listProducts);
         return listProducts;
+    }
+
+    public void updateEstoque(ArticlesPurchaseEntity articlesPurchaseEntity) throws IOException {
+
+        ProductEntity p = productRepository.findOneById(articlesPurchaseEntity.getProductId());
+        p.setQuantity(p.getQuantity() - articlesPurchaseEntity.getQuantity());
+
+        productRepository.save(p);
+
     }
 }

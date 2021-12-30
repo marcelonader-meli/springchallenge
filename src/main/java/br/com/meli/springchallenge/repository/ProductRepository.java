@@ -30,11 +30,18 @@ public class ProductRepository {
     }
 
     public ProductEntity findOneById(Long productId) throws IOException {
-        return Arrays.stream(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class)).filter(p -> p.getProductId().equals(productId)).findFirst().orElse(new ProductEntity());
+        return Arrays.stream(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class))
+                .filter(p -> p.getProductId().equals(productId)).findFirst().orElse(new ProductEntity());
     }
 
     public void save(ProductEntity productEntity) throws IOException {
-        productEntity.setProductId((long) productList.size()+1);
+
+        if(productEntity.getProductId()!=null){
+           removeById(productEntity.getProductId());
+        }else{
+            productEntity.setProductId((long) productList.size()+1);
+        }
+
         productList.add(productEntity);
         mapper.writeValue(new File(PATH), productList);
     }

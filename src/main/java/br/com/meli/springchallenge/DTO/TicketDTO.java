@@ -19,6 +19,7 @@ public class TicketDTO {
 
     private Long id;
     private List<ProductEntity>  articles;
+    private String observacoes;
     private BigDecimal total;
 
     public static Long getCont(){
