@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductEntity  implements Comparable<ProductEntity> {
+public class ProductEntity {
 
     private Long productId;
     private String name;
@@ -22,8 +22,5 @@ public class ProductEntity  implements Comparable<ProductEntity> {
     private Boolean freeShipping;
     private String prestige;
 
-    @Override
-    public int compareTo(ProductEntity productEntity) {
-        return this.name.compareTo(productEntity.getName());
-    }
+
 }

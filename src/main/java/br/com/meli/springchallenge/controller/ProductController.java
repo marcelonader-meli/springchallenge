@@ -38,12 +38,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.applyFilters(productEntity));
     }
 
-    //erro ao chamar o productEntity na linha 45
-    @GetMapping(value = "/mudar-rota")
-    public ResponseEntity<List<ProductEntity>> listProductsOrdered(@RequestParam Integer order) throws IOException {
-        //return ResponseEntity.ok(productService.orderingAscOrder(productEntity));
-        return null;
+    @GetMapping("/order{order}")
+    public ResponseEntity<List<ProductEntity>> listOrderedProducts(@RequestParam(required = false) Integer order) throws IOException {
+        return ResponseEntity.ok(productService.orderProducts(order));
     }
+
 
     @PostMapping("/register")
     public ResponseEntity<ProductEntity> registerProduct(@RequestBody ProductEntity productEntity) throws IOException {

@@ -8,12 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-
-import java.util.Arrays;
-import java.util.Collections;
-
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class ProductRepository {
@@ -25,6 +20,7 @@ public class ProductRepository {
     private final String PATH = "products.json";
 
     public List<ProductEntity> listAll() throws IOException {
+
         return Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
 
     }
@@ -68,12 +64,31 @@ public class ProductRepository {
         mapper.writeValue(new File(PATH), productListAll);
     }
 
+    public List<ProductEntity> sortByAscName() throws IOException{
+        List<ProductEntity> listProducts = Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
+        Collections.sort(listProducts, (a, b) -> a.getName().compareTo(b.getName()));
+        return listProducts;
 
+    }
 
-    public void orderByASC(List<ProductEntity> productList) {
-        Collections.sort(productList);
+    public List<ProductEntity> sortByDescName() throws IOException{
+        List<ProductEntity> listProducts = Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
+        Collections.sort(listProducts, (a, b) -> b.getName().compareTo(a.getName()));
+        return listProducts;
+
+    }
+
+    public List<ProductEntity> orderByLowestPrice() throws IOException {
+        List<ProductEntity> listProducts = Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
+        Collections.sort(listProducts, (a, b) -> a.getPrice().compareTo(b.getPrice()));
+        return listProducts;
     }
 
 
+    public List<ProductEntity> orderByTheHighestPrice() throws IOException {
+        List<ProductEntity> listProducts = Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
+        Collections.sort(listProducts, (a, b) -> b.getPrice().compareTo(a.getPrice()));
+        return listProducts;
+    }
 }
 

@@ -198,9 +198,18 @@ public class ProductService {
         return productCreateDTOList;
     }
 
-    public List<ProductEntity> orderingAscOrder(List<ProductEntity> listProducts) {
-        productRepository.orderByASC(listProducts);
-        return listProducts;
+    public List<ProductEntity> orderProducts(Integer order) throws IOException {
+        if(order == 0) {
+            return productRepository.sortByAscName();
+        } else if(order == 1) {
+            return productRepository.sortByDescName();
+        } else if(order == 2) {
+            return productRepository.orderByTheHighestPrice();
+        } else if(order == 3) {
+            return  productRepository.orderByLowestPrice();
+        }
+
+        return null;
     }
 
     public void updateEstoque(ArticlesPurchaseEntity articlesPurchaseEntity) throws IOException {
