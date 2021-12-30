@@ -21,8 +21,8 @@ public class ProductRepository {
 
 
 
-    private List<ProductEntity> productList = new ArrayList<>();
-    private ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+    private final List<ProductEntity> productList = new ArrayList<>();
+    private final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     private final String PATH = "products.json";
 
     public List<ProductEntity> listAll() throws IOException {
@@ -31,8 +31,7 @@ public class ProductRepository {
     }
 
     public ProductEntity findOneById(Long productId) throws IOException {
-        return Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class))
-                .stream().filter(p -> p.getProductId().equals(productId)).findFirst().orElse(new ProductEntity());
+        return Arrays.stream(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class)).filter(p -> p.getProductId().equals(productId)).findFirst().orElse(new ProductEntity());
     }
 
     public void save(ProductEntity productEntity) throws IOException {
