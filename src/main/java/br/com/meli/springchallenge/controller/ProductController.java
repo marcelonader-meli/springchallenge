@@ -30,15 +30,25 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<ProductEntity>> listProductsFiltered(
+            @RequestParam(required = false) Integer order,
             ProductEntity productEntity
     ) throws IOException, ProductNotFoundException {
-        return ResponseEntity.ok(productService.applyFilters(productEntity));
+        List<ProductEntity> listFiltered = productService.applyFilters(productEntity);
+        List<ProductEntity> listAll = productService.listAll();
+        if(order != null && productEntity != null) {
+            productService.orderProducts(order, listFiltered);
+            return ResponseEntity.ok(listFiltered);
+        } else if(order != null) {
+            productService.orderProducts(order, listAll);
+            return ResponseEntity.ok(listAll);
+        }
+        return ResponseEntity.ok(listFiltered);
     }
 
-    @GetMapping("/order{order}")
-    public ResponseEntity<List<ProductEntity>> listOrderedProducts(@RequestParam(required = false) Integer order) throws IOException {
-        return ResponseEntity.ok(productService.orderProducts(order));
-    }
+//    @GetMapping("/order{order}")
+//    public ResponseEntity<List<ProductEntity>> listOrderedProducts(@RequestParam(required = false) Integer order) throws IOException {
+//        return ResponseEntity.ok(productService.orderProducts(order));
+//    }
 
 
     @PostMapping("/register")

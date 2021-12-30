@@ -69,29 +69,29 @@ public class ProductRepository {
         mapper.writeValue(new File(PATH), productListAll);
     }
 
-    public List<ProductEntity> sortByAscName() throws IOException{
-        List<ProductEntity> listProducts = Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
+    public List<ProductEntity> sortByAscName(List<ProductEntity> listProducts) throws IOException{
+//        List<ProductEntity> listProducts = Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
         Collections.sort(listProducts, (a, b) -> a.getName().compareTo(b.getName()));
         return listProducts;
 
     }
 
-    public List<ProductEntity> sortByDescName() throws IOException{
-        List<ProductEntity> listProducts = Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
+    public List<ProductEntity> sortByDescName(List<ProductEntity> listProducts) throws IOException{
+//        List<ProductEntity> listProducts = Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
         Collections.sort(listProducts, (a, b) -> b.getName().compareTo(a.getName()));
         return listProducts;
 
     }
 
-    public List<ProductEntity> orderByLowestPrice() throws IOException {
-        List<ProductEntity> listProducts = Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
+    public List<ProductEntity> orderByLowestPrice(List<ProductEntity> listProducts) throws IOException {
+//        List<ProductEntity> listProducts = Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
         Collections.sort(listProducts, (a, b) -> a.getPrice().compareTo(b.getPrice()));
         return listProducts;
     }
 
 
-    public List<ProductEntity> orderByTheHighestPrice() throws IOException {
-        List<ProductEntity> listProducts = Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
+    public List<ProductEntity> orderByTheHighestPrice(List<ProductEntity> listProducts) throws IOException {
+//        List<ProductEntity> listProducts = Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
         Collections.sort(listProducts, (a, b) -> b.getPrice().compareTo(a.getPrice()));
         return listProducts;
     }

@@ -112,9 +112,6 @@ public class ProductService {
             }
             else {
                 listPriceFiltered = listAll.stream().filter(product -> product.getPrice().compareTo(productEntity.getPrice()) <= 0).collect(Collectors.toList());
-                if(listPriceFiltered.isEmpty()){
-                    throw new ProductNotFoundException("Nenhum produto encontrado com os parâmetros informados.");
-                }
             }
         }
 
@@ -123,7 +120,7 @@ public class ProductService {
                 : !listPrestigeFiltered.isEmpty() ? listPrestigeFiltered
                 : !listFreeShippingFiltered.isEmpty() ? listFreeShippingFiltered
                 : !listCategoryFiltered.isEmpty() ? listCategoryFiltered
-                : listEmpty;
+                : listAll;
     }
 
     public ProductEntity registerProduct(ProductEntity productEntity) throws IOException {
@@ -191,15 +188,15 @@ public class ProductService {
         return productCreateDTOList;
     }
 
-    public List<ProductEntity> orderProducts(Integer order) throws IOException {
+    public List<ProductEntity> orderProducts(Integer order, List<ProductEntity> listProducts) throws IOException {
         if(order == 0) {
-            return productRepository.sortByAscName();
+            return productRepository.sortByAscName(listProducts);
         } else if(order == 1) {
-            return productRepository.sortByDescName();
+            return productRepository.sortByDescName(listProducts);
         } else if(order == 2) {
-            return productRepository.orderByTheHighestPrice();
+            return productRepository.orderByTheHighestPrice(listProducts);
         } else if(order == 3) {
-            return  productRepository.orderByLowestPrice();
+            return  productRepository.orderByLowestPrice(listProducts);
         }
 
         return null;
