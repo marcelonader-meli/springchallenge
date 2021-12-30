@@ -49,7 +49,12 @@ public class ProductController {
     @PostMapping("/purchase-request")
     public ResponseEntity<TicketDTO> buyProduct(@RequestBody ShoppingCartEntity shoppingCart) throws Exception {
         return ResponseEntity.ok(this.productService.buyProduct(shoppingCart));
+        //if(observacoes.equals("")){
+        //    throw new Exception(" Não foi possivel adicionar todos os itens ao carrinho, verifique as observacoes no ticket");
+        //}
     }
+
+
 
     @PostMapping("/insert-articles-request")
     public ResponseEntity<List<ProductCreateDTO>> saveProducts(@RequestBody List<ProductEntity> listProducts) {
