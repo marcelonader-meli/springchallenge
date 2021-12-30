@@ -37,12 +37,16 @@ public class ProductRepository {
     public void save(ProductEntity productEntity) throws IOException {
 
         if(productEntity.getProductId()!=null){
-           removeById(productEntity.getProductId());
+            for(ProductEntity p : productList){
+                if(p.getProductId()==productEntity.getProductId()){
+                    p.setQuantity(productEntity.getQuantity());
+                }
+            }
         }else{
             productEntity.setProductId((long) productList.size()+1);
+            productList.add(productEntity);
         }
 
-        productList.add(productEntity);
         mapper.writeValue(new File(PATH), productList);
     }
 

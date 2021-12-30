@@ -142,7 +142,7 @@ public class ProductService {
 
         List<ProductEntity> productEntities = new ArrayList<>();
         TicketDTO ticketDTO;
-        StringBuilder observacoes = null;
+        StringBuilder observacoes = new StringBuilder("");
         BigDecimal total = new BigDecimal(0);
 
         for(ArticlesPurchaseEntity articlesPurchaseEntity : shoppingCart.getArticlesPurchaseRequest()){
@@ -168,14 +168,14 @@ public class ProductService {
                                     .build()
                     );
                 }else{
-                    observacoes.append("Quantidade do item " + productEntity.getName() + " Nao disponivel\n");
+                    observacoes.append("Quantidade do item " + productEntity.getName() + " Nao disponivel | ");
                 }
             }else{
                 observacoes.append("Produto" + articlesPurchaseEntity.getName() + "nao existente");
             }
         }
 
-        if(observacoes!= null){
+        if(observacoes.equals("")){
             throw new Exception(" Não foi possivel adicionar todos os itens ao carrinho, verifique as observacoes no ticket");
         }
 
