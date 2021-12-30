@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -15,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class ProductRepository {
@@ -26,7 +26,9 @@ public class ProductRepository {
     private final String PATH = "products.json";
 
     public List<ProductEntity> listAll() throws IOException {
-        return Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
+
+        return Arrays.stream(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class))
+                .filter(p -> p.getQuantity() > 0).collect(Collectors.toList());
 
     }
 

@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -45,12 +44,6 @@ public class ProductController {
         return ResponseEntity.ok(listFiltered);
     }
 
-//    @GetMapping("/order{order}")
-//    public ResponseEntity<List<ProductEntity>> listOrderedProducts(@RequestParam(required = false) Integer order) throws IOException {
-//        return ResponseEntity.ok(productService.orderProducts(order));
-//    }
-
-
     @PostMapping("/register")
     public ResponseEntity<ProductEntity> registerProduct(@RequestBody ProductEntity productEntity) throws IOException {
         return ResponseEntity.ok(productService.registerProduct(productEntity));
@@ -63,8 +56,6 @@ public class ProductController {
         //    throw new Exception(" Não foi possivel adicionar todos os itens ao carrinho, verifique as observacoes no ticket");
         //}
     }
-
-
 
     @PostMapping("/insert-articles-request")
     public ResponseEntity<List<ProductCreateDTO>> saveProducts(@RequestBody List<ProductEntity> listProducts) {
