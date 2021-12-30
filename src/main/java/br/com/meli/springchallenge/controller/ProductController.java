@@ -3,6 +3,7 @@ package br.com.meli.springchallenge.controller;
 import br.com.meli.springchallenge.DTO.TicketDTO;
 import br.com.meli.springchallenge.entity.ProductEntity;
 import br.com.meli.springchallenge.entity.ShoppingCartEntity;
+import br.com.meli.springchallenge.exceptions.ProductNotFoundException;
 import br.com.meli.springchallenge.service.ProductService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,17 +26,11 @@ public class ProductController {
     public ResponseEntity<List<ProductEntity>> listAll() throws IOException {
         return ResponseEntity.ok(productService.listAll());
     }
-//
-//    @GetMapping
-//    public ResponseEntity<?> listProductByCategory(@RequestParam String category){
-//        return null;
-//    }
 
     @GetMapping
     public ResponseEntity<List<ProductEntity>> listProductsFiltered(
-//            @RequestParam(required = false) Integer order,
             ProductEntity productEntity
-    ) throws IOException {
+    ) throws IOException, ProductNotFoundException {
         return ResponseEntity.ok(productService.applyFilters(productEntity));
     }
 

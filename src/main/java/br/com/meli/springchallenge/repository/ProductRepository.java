@@ -35,7 +35,7 @@ public class ProductRepository {
     }
 
     public void save(ProductEntity productEntity) throws IOException {
-        productEntity.setProductId((long) productList.size()+1);
+//        productEntity.setProductId((long) productList.size()+1);
         productList.add(productEntity);
         mapper.writeValue(new File(PATH), productList);
     }
