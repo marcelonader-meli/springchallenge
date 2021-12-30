@@ -57,8 +57,6 @@ public class ProductController {
         //}
     }
 
-
-
     @PostMapping("/insert-articles-request")
     public ResponseEntity<List<ProductCreateDTO>> saveProducts(@RequestBody List<ProductEntity> listProducts) {
         try {

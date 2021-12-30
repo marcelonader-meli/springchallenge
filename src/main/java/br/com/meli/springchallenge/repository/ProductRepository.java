@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class ProductRepository {
@@ -27,8 +29,9 @@ public class ProductRepository {
     private final String PATH = "products.json";
 
     public List<ProductEntity> listAll() throws IOException, ListIsEmptyException {
-        try{
-            List<ProductEntity> listAll = Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
+        try {
+            List<ProductEntity> listAll = Arrays.stream(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class))
+                    .filter(p -> p.getQuantity() > 0).collect(Collectors.toList());
             return listAll;
         } catch (MismatchedInputException e) {
             throw new ListIsEmptyException("Não há produtos cadastrados no sistema.");
@@ -39,8 +42,6 @@ public class ProductRepository {
         return Arrays.stream(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class))
                 .filter(p -> p.getProductId().equals(productId)).findFirst().orElse(new ProductEntity());
     }
-
-
 
     public void save(ProductEntity productEntity) throws IOException {
 
