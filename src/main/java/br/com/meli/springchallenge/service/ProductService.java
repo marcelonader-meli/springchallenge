@@ -5,8 +5,10 @@ import br.com.meli.springchallenge.DTO.TicketDTO;
 import br.com.meli.springchallenge.entity.ArticlesPurchaseEntity;
 import br.com.meli.springchallenge.entity.ProductEntity;
 import br.com.meli.springchallenge.entity.ShoppingCartEntity;
+import br.com.meli.springchallenge.exceptions.ProductNotFoundException;
 import br.com.meli.springchallenge.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -20,7 +22,7 @@ public class ProductService {
     @Autowired
     ProductRepository productRepository;
 
-    public List<ProductEntity> applyFilters(ProductEntity productEntity) throws IOException {
+    public List<ProductEntity> applyFilters(ProductEntity productEntity) throws IOException, ProductNotFoundException {
 
         List<ProductEntity> listAll = productRepository.listAll();
         List<ProductEntity> listCategoryFiltered = new ArrayList<>();
@@ -32,13 +34,12 @@ public class ProductService {
 
         if(productEntity.getCategory() != null){
             listCategoryFiltered = listAll.stream().filter(product -> product.getCategory().equalsIgnoreCase(productEntity.getCategory())).collect(Collectors.toList());
-
         }
         if(productEntity.getFreeShipping() != null){
             if(!listCategoryFiltered.isEmpty()) {
                 listFreeShippingFiltered = listCategoryFiltered.stream().filter(product -> product.getFreeShipping() == productEntity.getFreeShipping()).collect(Collectors.toList());
                 if(listFreeShippingFiltered.isEmpty()){
-                    return listEmpty;
+                    throw new ProductNotFoundException("Nenhum produto encontrado com os parâmetros informados.");
                 }
             }
             else{
@@ -49,14 +50,14 @@ public class ProductService {
             if (!listFreeShippingFiltered.isEmpty()) {
                 listPrestigeFiltered = listFreeShippingFiltered.stream().filter(product -> product.getPrestige().equals(productEntity.getPrestige())).collect(Collectors.toList());
                 if(listPrestigeFiltered.isEmpty()){
-                    return listEmpty;
+                    throw new ProductNotFoundException("Nenhum produto encontrado com os parâmetros informados.");
                 }
 
             }
             else if (!listCategoryFiltered.isEmpty()) {
                 listPrestigeFiltered = listCategoryFiltered.stream().filter(product -> product.getPrestige().equals(productEntity.getPrestige())).collect(Collectors.toList());
                 if(listPrestigeFiltered.isEmpty()){
-                    return listEmpty;
+                    throw new ProductNotFoundException("Nenhum produto encontrado com os parâmetros informados.");
                 }
             }
             else {
@@ -67,57 +68,53 @@ public class ProductService {
             if (!listPrestigeFiltered.isEmpty()) {
                 listBrandFiltered = listPrestigeFiltered.stream().filter(product -> product.getBrand().equalsIgnoreCase(productEntity.getBrand())).collect(Collectors.toList());
                 if(listBrandFiltered.isEmpty()){
-                    return listEmpty;
+                    throw new ProductNotFoundException("Nenhum produto encontrado com os parâmetros informados.");
                 }
             }
             else if (!listFreeShippingFiltered.isEmpty()) {
                 listBrandFiltered = listFreeShippingFiltered.stream().filter(product -> product.getBrand().equalsIgnoreCase(productEntity.getBrand())).collect(Collectors.toList());
                 if(listBrandFiltered.isEmpty()){
-                    return listEmpty;
+                    throw new ProductNotFoundException("Nenhum produto encontrado com os parâmetros informados.");
                 }
             }
             else if (!listCategoryFiltered.isEmpty()) {
                 listBrandFiltered = listCategoryFiltered.stream().filter(product -> product.getBrand().equalsIgnoreCase(productEntity.getBrand())).collect(Collectors.toList());
-
                 if(listBrandFiltered.isEmpty()){
-                    return listEmpty;
+                    throw new ProductNotFoundException("Nenhum produto encontrado com os parâmetros informados.");
                 }
             }
             else {
                 listBrandFiltered = listAll.stream().filter(product -> product.getBrand().equalsIgnoreCase(productEntity.getBrand())).collect(Collectors.toList());
-
             }
         }
         if(productEntity.getPrice() != null) {
             if (!listBrandFiltered.isEmpty()) {
                 listPriceFiltered = listBrandFiltered.stream().filter(product -> product.getPrice().compareTo(productEntity.getPrice()) <= 0).collect(Collectors.toList());
                 if(listPriceFiltered.isEmpty()){
-                    return listEmpty;
+                    throw new ProductNotFoundException("Nenhum produto encontrado com os parâmetros informados.");
                 }
-
             }
             else if (!listPrestigeFiltered.isEmpty()) {
                 listPriceFiltered = listPrestigeFiltered.stream().filter(product -> product.getPrice().compareTo(productEntity.getPrice()) <= 0).collect(Collectors.toList());
                 if(listPriceFiltered.isEmpty()){
-                    return listEmpty;
+                    throw new ProductNotFoundException("Nenhum produto encontrado com os parâmetros informados.");
                 }
-
             } else if (!listFreeShippingFiltered.isEmpty()) {
                 listPriceFiltered = listFreeShippingFiltered.stream().filter(product -> product.getPrice().compareTo(productEntity.getPrice()) <= 0).collect(Collectors.toList());
                 if(listPriceFiltered.isEmpty()){
-                    return listEmpty;
+                    throw new ProductNotFoundException("Nenhum produto encontrado com os parâmetros informados.");
                 }
-
             } else if (!listCategoryFiltered.isEmpty()) {
                 listPriceFiltered = listCategoryFiltered.stream().filter(product -> product.getPrice().compareTo(productEntity.getPrice()) <= 0).collect(Collectors.toList());
                 if(listPriceFiltered.isEmpty()){
-                    return listEmpty;
+                    throw new ProductNotFoundException("Nenhum produto encontrado com os parâmetros informados.");
                 }
-
             }
             else {
                 listPriceFiltered = listAll.stream().filter(product -> product.getPrice().compareTo(productEntity.getPrice()) <= 0).collect(Collectors.toList());
-
+                if(listPriceFiltered.isEmpty()){
+                    throw new ProductNotFoundException("Nenhum produto encontrado com os parâmetros informados.");
+                }
             }
         }
 
@@ -173,10 +170,6 @@ public class ProductService {
             }else{
                 observacoes.append("Produto" + articlesPurchaseEntity.getName() + "nao existente");
             }
-        }
-
-        if(observacoes.equals("")){
-            throw new Exception(" Não foi possivel adicionar todos os itens ao carrinho, verifique as observacoes no ticket");
         }
 
         return TicketDTO.builder()

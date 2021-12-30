@@ -4,12 +4,15 @@ import br.com.meli.springchallenge.DTO.ProductCreateDTO;
 import br.com.meli.springchallenge.DTO.TicketDTO;
 import br.com.meli.springchallenge.entity.ProductEntity;
 import br.com.meli.springchallenge.entity.ShoppingCartEntity;
+import br.com.meli.springchallenge.exceptions.ProductNotFoundException;
 import br.com.meli.springchallenge.service.ProductService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -24,17 +27,11 @@ public class ProductController {
     public ResponseEntity<List<ProductEntity>> listAll() throws IOException {
         return ResponseEntity.ok(productService.listAll());
     }
-//
-//    @GetMapping
-//    public ResponseEntity<?> listProductByCategory(@RequestParam String category){
-//        return null;
-//    }
 
     @GetMapping
     public ResponseEntity<List<ProductEntity>> listProductsFiltered(
-//            @RequestParam(required = false) Integer order,
             ProductEntity productEntity
-    ) throws IOException {
+    ) throws IOException, ProductNotFoundException {
         return ResponseEntity.ok(productService.applyFilters(productEntity));
     }
 
@@ -52,7 +49,12 @@ public class ProductController {
     @PostMapping("/purchase-request")
     public ResponseEntity<TicketDTO> buyProduct(@RequestBody ShoppingCartEntity shoppingCart) throws Exception {
         return ResponseEntity.ok(this.productService.buyProduct(shoppingCart));
+        //if(observacoes.equals("")){
+        //    throw new Exception(" Não foi possivel adicionar todos os itens ao carrinho, verifique as observacoes no ticket");
+        //}
     }
+
+
 
     @PostMapping("/insert-articles-request")
     public ResponseEntity<List<ProductCreateDTO>> saveProducts(@RequestBody List<ProductEntity> listProducts) {
