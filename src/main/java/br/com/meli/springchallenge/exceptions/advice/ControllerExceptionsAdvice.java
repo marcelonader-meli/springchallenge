@@ -1,8 +1,6 @@
 package br.com.meli.springchallenge.exceptions.advice;
 
-import br.com.meli.springchallenge.exceptions.ListProductIsEmptyException;
-import br.com.meli.springchallenge.exceptions.OutOfStockException;
-import br.com.meli.springchallenge.exceptions.ProductNotFoundException;
+import br.com.meli.springchallenge.exceptions.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,10 +21,24 @@ public class ControllerExceptionsAdvice {
             return ResponseEntity.badRequest().body(bodyOfResponse);
         }
 
-        @ExceptionHandler(value = ListProductIsEmptyException.class)
-        protected ResponseEntity<?> noStockException(ListProductIsEmptyException ex, WebRequest request) {
+        @ExceptionHandler(value = ListIsEmptyException.class)
+        protected ResponseEntity<?> noStockException(ListIsEmptyException ex, WebRequest request) {
             String bodyOfResponse = ex.getMessage();
             return ResponseEntity.badRequest().body(bodyOfResponse);
         }
+
+        @ExceptionHandler(value = ExistingClientException.class)
+        protected ResponseEntity<?> existingClientException(ExistingClientException ex, WebRequest request) {
+            String bodyOfResponse = ex.getMessage();
+            return ResponseEntity.badRequest().body(bodyOfResponse);
+        }
+
+        @ExceptionHandler(value = IncompleteDataException.class)
+        protected ResponseEntity<?> incompleteDataException(IncompleteDataException ex, WebRequest request) {
+            String bodyOfResponse = ex.getMessage();
+            return ResponseEntity.badRequest().body(bodyOfResponse);
+        }
+
+
 }
 

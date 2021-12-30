@@ -1,12 +1,13 @@
 package br.com.meli.springchallenge.repository;
 
 import br.com.meli.springchallenge.entity.ProductEntity;
+import br.com.meli.springchallenge.exceptions.ListIsEmptyException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -25,15 +26,21 @@ public class ProductRepository {
     private final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     private final String PATH = "products.json";
 
-    public List<ProductEntity> listAll() throws IOException {
-        return Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
-
+    public List<ProductEntity> listAll() throws IOException, ListIsEmptyException {
+        try{
+            List<ProductEntity> listAll = Arrays.asList(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class));
+            return listAll;
+        } catch (MismatchedInputException e) {
+            throw new ListIsEmptyException("Não há produtos cadastrados no sistema.");
+        }
     }
 
     public ProductEntity findOneById(Long productId) throws IOException {
         return Arrays.stream(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class))
                 .filter(p -> p.getProductId().equals(productId)).findFirst().orElse(new ProductEntity());
     }
+
+
 
     public void save(ProductEntity productEntity) throws IOException {
 

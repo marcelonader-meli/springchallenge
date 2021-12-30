@@ -1,12 +1,12 @@
 package br.com.meli.springchallenge.exceptions;
 
-public class ListProductIsEmptyException extends Exception{
+public class IncompleteDataException extends Exception{
 
-    public ListProductIsEmptyException(){
+    public IncompleteDataException(){
         super();
     }
 
-    public ListProductIsEmptyException(String message) {
+    public IncompleteDataException(String message) {
         super(message);
     }
 

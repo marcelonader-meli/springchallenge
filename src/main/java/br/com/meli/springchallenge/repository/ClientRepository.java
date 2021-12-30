@@ -2,6 +2,7 @@ package br.com.meli.springchallenge.repository;
 
 import br.com.meli.springchallenge.entity.ClientEntity;
 import br.com.meli.springchallenge.entity.ProductEntity;
+import br.com.meli.springchallenge.exceptions.ExistingClientException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.stereotype.Repository;
@@ -21,10 +22,7 @@ public class ClientRepository {
     private final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     private final String PATH = "clients.json";
 
-    public List<ClientEntity> listAll() throws IOException {
-        return Arrays.asList(mapper.readValue(Paths.get("clients.json").toFile(), ClientEntity[].class));
 
-    }
 
     public ClientEntity findOneById(Long clientId) throws IOException {
         return Arrays.stream(mapper.readValue(Paths.get("clients.json").toFile(), ClientEntity[].class))
@@ -36,9 +34,10 @@ public class ClientRepository {
         clientList.add(clientEntity);
         mapper.writeValue(new File(PATH), clientList);
     }
-    public List<ClientEntity> findClientsByUF(String uf) throws IOException {
+
+    public ClientEntity findOneByNameAndEmail(String name, String email) throws IOException, ExistingClientException {
         return Arrays.stream(mapper.readValue(Paths.get("clients.json").toFile(), ClientEntity[].class))
-                .filter(p -> p.getUf().equals(uf)).collect(Collectors.toList());
+                .filter(p -> p.getName().equalsIgnoreCase(name) && p.getEmail().equalsIgnoreCase(email)).findFirst().orElse(null);
     }
 
 }

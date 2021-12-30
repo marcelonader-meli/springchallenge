@@ -4,15 +4,14 @@ import br.com.meli.springchallenge.DTO.ProductCreateDTO;
 import br.com.meli.springchallenge.DTO.TicketDTO;
 import br.com.meli.springchallenge.entity.ProductEntity;
 import br.com.meli.springchallenge.entity.ShoppingCartEntity;
+import br.com.meli.springchallenge.exceptions.ListIsEmptyException;
 import br.com.meli.springchallenge.exceptions.ProductNotFoundException;
 import br.com.meli.springchallenge.service.ProductService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -24,7 +23,7 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping("/")
-    public ResponseEntity<List<ProductEntity>> listAll() throws IOException {
+    public ResponseEntity<List<ProductEntity>> listAll() throws IOException, ListIsEmptyException {
         return ResponseEntity.ok(productService.listAll());
     }
 
@@ -32,7 +31,7 @@ public class ProductController {
     public ResponseEntity<List<ProductEntity>> listProductsFiltered(
             @RequestParam(required = false) Integer order,
             ProductEntity productEntity
-    ) throws IOException, ProductNotFoundException {
+    ) throws IOException, ProductNotFoundException, ListIsEmptyException {
         List<ProductEntity> listFiltered = productService.applyFilters(productEntity);
         List<ProductEntity> listAll = productService.listAll();
         if(order != null && productEntity != null) {
@@ -44,12 +43,6 @@ public class ProductController {
         }
         return ResponseEntity.ok(listFiltered);
     }
-
-//    @GetMapping("/order{order}")
-//    public ResponseEntity<List<ProductEntity>> listOrderedProducts(@RequestParam(required = false) Integer order) throws IOException {
-//        return ResponseEntity.ok(productService.orderProducts(order));
-//    }
-
 
     @PostMapping("/register")
     public ResponseEntity<ProductEntity> registerProduct(@RequestBody ProductEntity productEntity) throws IOException {

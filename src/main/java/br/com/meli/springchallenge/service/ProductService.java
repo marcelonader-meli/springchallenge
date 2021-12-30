@@ -5,10 +5,10 @@ import br.com.meli.springchallenge.DTO.TicketDTO;
 import br.com.meli.springchallenge.entity.ArticlesPurchaseEntity;
 import br.com.meli.springchallenge.entity.ProductEntity;
 import br.com.meli.springchallenge.entity.ShoppingCartEntity;
+import br.com.meli.springchallenge.exceptions.ListIsEmptyException;
 import br.com.meli.springchallenge.exceptions.ProductNotFoundException;
 import br.com.meli.springchallenge.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class ProductService {
     @Autowired
     ProductRepository productRepository;
 
-    public List<ProductEntity> applyFilters(ProductEntity productEntity) throws IOException, ProductNotFoundException {
+    public List<ProductEntity> applyFilters(ProductEntity productEntity) throws IOException, ProductNotFoundException, ListIsEmptyException {
 
         List<ProductEntity> listAll = productRepository.listAll();
         List<ProductEntity> listCategoryFiltered = new ArrayList<>();
@@ -128,7 +128,7 @@ public class ProductService {
        return productEntity;
     }
 
-    public List<ProductEntity> listAll() throws IOException {
+    public List<ProductEntity> listAll() throws IOException, ListIsEmptyException {
         return productRepository.listAll();
     }
 
