@@ -175,10 +175,6 @@ public class ProductService {
             }
         }
 
-        if(observacoes.equals("")){
-            throw new Exception(" Não foi possivel adicionar todos os itens ao carrinho, verifique as observacoes no ticket");
-        }
-
         return TicketDTO.builder()
                 .articles(productEntities)
                 .total(total)
