@@ -1,6 +1,7 @@
 package br.com.meli.springchallenge.controller;
 
 import br.com.meli.springchallenge.DTO.ProductCreateDTO;
+import br.com.meli.springchallenge.DTO.ProductDTO;
 import br.com.meli.springchallenge.DTO.TicketDTO;
 import br.com.meli.springchallenge.entity.ProductEntity;
 import br.com.meli.springchallenge.entity.ShoppingCartEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/articles")
@@ -23,12 +25,12 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping("/")
-    public ResponseEntity<List<ProductEntity>> listAll() throws IOException, ListIsEmptyException {
-        return ResponseEntity.ok(productService.listAll());
+    public ResponseEntity<List<ProductDTO>> listAll() throws IOException, ListIsEmptyException {
+        return ResponseEntity.ok(productService.listAll().stream().map(ProductDTO::convert).collect(Collectors.toList()));
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductEntity>> listProductsFiltered(
+    public ResponseEntity<List<ProductDTO>> listProductsFiltered(
             @RequestParam(required = false) Integer order,
             ProductEntity productEntity
     ) throws IOException, ProductNotFoundException, ListIsEmptyException {
@@ -36,17 +38,17 @@ public class ProductController {
         List<ProductEntity> listAll = productService.listAll();
         if(order != null && productEntity != null) {
             productService.orderProducts(order, listFiltered);
-            return ResponseEntity.ok(listFiltered);
+            return ResponseEntity.ok(listFiltered.stream().map(ProductDTO::convert).collect(Collectors.toList()));
         } else if(order != null) {
             productService.orderProducts(order, listAll);
-            return ResponseEntity.ok(listAll);
+            return ResponseEntity.ok(listAll.stream().map(ProductDTO::convert).collect(Collectors.toList()));
         }
-        return ResponseEntity.ok(listFiltered);
+        return ResponseEntity.ok(listFiltered.stream().map(ProductDTO::convert).collect(Collectors.toList()));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ProductEntity> registerProduct(@RequestBody ProductEntity productEntity) throws IOException {
-        return ResponseEntity.ok(productService.registerProduct(productEntity));
+    public ResponseEntity<ProductCreateDTO> registerProduct(@RequestBody ProductEntity productEntity) throws IOException {
+        return ResponseEntity.ok(ProductCreateDTO.convertToDTO(productService.registerProduct(productEntity)));
     }
 
     @PostMapping("/purchase-request")

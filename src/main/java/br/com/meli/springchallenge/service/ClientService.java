@@ -1,16 +1,20 @@
 package br.com.meli.springchallenge.service;
 
 import br.com.meli.springchallenge.entity.ClientEntity;
+import br.com.meli.springchallenge.entity.ProductEntity;
 import br.com.meli.springchallenge.exceptions.ExistingClientException;
 import br.com.meli.springchallenge.exceptions.IncompleteDataException;
 import br.com.meli.springchallenge.exceptions.ListIsEmptyException;
 import br.com.meli.springchallenge.repository.ClientRepository;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ClientService {
@@ -26,9 +30,13 @@ public class ClientService {
                     "\"phone\": \"string\",\n" +
                     "\"email\": \"string\",\n" +
                     "\"uf\": \"string\"");
-        ClientEntity clientEntityRepository = clientRepository.findOneByNameAndEmail(clientEntity.getName(), clientEntity.getEmail());
-        if(clientEntityRepository != null)
-            throw new ExistingClientException("Cliente existente.");
+        try {
+            ClientEntity clientEntityRepository = clientRepository.findOneByNameAndEmail(clientEntity.getName(), clientEntity.getEmail());
+            if(clientEntityRepository != null)
+                throw new ExistingClientException("Cliente existente.");
+        } catch (MismatchedInputException e) {
+            e.printStackTrace();
+        }
         clientRepository.save(clientEntity);
     }
 

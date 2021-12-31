@@ -16,12 +16,16 @@ public class ProductCreateDTO {
     private String name;
     private Integer quantity;
 
-    public ProductCreateDTO convertToDTO(ProductEntity productEntity){
-
-        this.productId = productEntity.getProductId();
-
-
-        return this;
+    public static ProductCreateDTO convertToDTO(ProductEntity productEntity){
+//        productId = productEntity.getProductId();
+//
+//
+//        return this;
+        return ProductCreateDTO.builder()
+                .productId(productEntity.getProductId())
+                .name(productEntity.getName())
+                .quantity(productEntity.getQuantity())
+                .build();
     }
 
 }
