@@ -25,8 +25,12 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping("/")
-    public ResponseEntity<List<ProductDTO>> listAll() throws IOException, ListIsEmptyException {
-        return ResponseEntity.ok(productService.listAll().stream().map(ProductDTO::convert).collect(Collectors.toList()));
+    public ResponseEntity<List<ProductEntity>> listAll() throws IOException {
+        try {
+            return ResponseEntity.ok(productService.listAll());
+        } catch (IOException | ListIsEmptyException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
     @GetMapping
@@ -34,36 +38,56 @@ public class ProductController {
             @RequestParam(required = false) Integer order,
             ProductEntity productEntity
     ) throws IOException, ProductNotFoundException, ListIsEmptyException {
-        List<ProductEntity> listFiltered = productService.applyFilters(productEntity);
-        List<ProductEntity> listAll = productService.listAll();
-        if(order != null && productEntity != null) {
-            productService.orderProducts(order, listFiltered);
+        try {
+            List<ProductEntity> listFiltered = productService.applyFilters(productEntity);
+            List<ProductEntity> listAll = productService.listAll();
+            if (order != null && productEntity != null) {
+                productService.orderProducts(order, listFiltered);
+                return ResponseEntity.ok(listFiltered.stream().map(ProductDTO::convert).collect(Collectors.toList()));
+            } else if (order != null) {
+                productService.orderProducts(order, listAll);
+                return ResponseEntity.ok(listAll.stream().map(ProductDTO::convert).collect(Collectors.toList()));
+            }
             return ResponseEntity.ok(listFiltered.stream().map(ProductDTO::convert).collect(Collectors.toList()));
-        } else if(order != null) {
-            productService.orderProducts(order, listAll);
-            return ResponseEntity.ok(listAll.stream().map(ProductDTO::convert).collect(Collectors.toList()));
+
+            /*return ResponseEntity.ok(productService.applyFilters(productEntity));*/
+        } catch (IOException |
+                ListIsEmptyException e) {
+            return ResponseEntity.badRequest().body(null);
         }
-        return ResponseEntity.ok(listFiltered.stream().map(ProductDTO::convert).collect(Collectors.toList()));
+
     }
 
+
     @PostMapping("/register")
-    public ResponseEntity<ProductCreateDTO> registerProduct(@RequestBody ProductEntity productEntity) throws IOException {
-        return ResponseEntity.ok(ProductCreateDTO.convertToDTO(productService.registerProduct(productEntity)));
+    public ResponseEntity<ProductEntity> registerProduct(@RequestBody ProductEntity productEntity) throws
+            IOException {
+        try {
+            return ResponseEntity.ok(productService.registerProduct(productEntity));
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
     @PostMapping("/purchase-request")
     public ResponseEntity<TicketDTO> buyProduct(@RequestBody ShoppingCartEntity shoppingCart) throws Exception {
-        return ResponseEntity.ok(this.productService.buyProduct(shoppingCart));
+        try {
+            return ResponseEntity.ok(this.productService.buyProduct(shoppingCart));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
         //if(observacoes.equals("")){
         //    throw new Exception(" Não foi possivel adicionar todos os itens ao carrinho, verifique as observacoes no ticket");
         //}
     }
 
+
     @PostMapping("/insert-articles-request")
     public ResponseEntity<List<ProductCreateDTO>> saveProducts(@RequestBody List<ProductEntity> listProducts) {
         try {
             return ResponseEntity.ok().body(productService.saveProducts(listProducts));
-        }catch (Exception e ){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }
     }
