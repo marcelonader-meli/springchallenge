@@ -34,7 +34,7 @@ public class ProductRepository {
                     .filter(p -> p.getQuantity() > 0).collect(Collectors.toList());
             return listAll;
         } catch (MismatchedInputException e) {
-            throw new ListIsEmptyException("Não há produtos cadastrados no sistema.");
+            throw new ListIsEmptyException();
         }
     }
 

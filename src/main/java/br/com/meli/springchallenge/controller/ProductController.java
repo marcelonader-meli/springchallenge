@@ -25,11 +25,15 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping("/")
-    public ResponseEntity<List<ProductEntity>> listAll() throws IOException {
+    public ResponseEntity<?> listAll() throws IOException {
         try {
             return ResponseEntity.ok(productService.listAll());
-        } catch (IOException | ListIsEmptyException e) {
-            return ResponseEntity.badRequest().body(null);
+        }
+        catch (IOException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        catch (ListIsEmptyException e){
+            return ResponseEntity.badRequest().body("Não há produtos cadastrados no sistema.");
         }
     }
 
