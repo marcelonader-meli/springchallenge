@@ -27,7 +27,7 @@ public class ProductController {
     @GetMapping("/")
     public ResponseEntity<?> listAll() throws IOException {
         try {
-            return ResponseEntity.ok(productService.listAll());
+            ResponseEntity.ok(productService.listAll().stream().map(ProductDTO::convert).collect(Collectors.toList()));
         }
         catch (IOException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
