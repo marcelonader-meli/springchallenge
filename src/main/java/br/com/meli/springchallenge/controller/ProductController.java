@@ -38,7 +38,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDTO>> listProductsFiltered(
+    public ResponseEntity<?> listProductsFiltered(
             @RequestParam(required = false) Integer order,
             ProductEntity productEntity
     ) throws IOException, ProductNotFoundException, ListIsEmptyException {
@@ -55,9 +55,12 @@ public class ProductController {
             return ResponseEntity.ok(listFiltered.stream().map(ProductDTO::convert).collect(Collectors.toList()));
 
             /*return ResponseEntity.ok(productService.applyFilters(productEntity));*/
-        } catch (IOException |
-                ListIsEmptyException e) {
-            return ResponseEntity.badRequest().body(null);
+        }
+        catch (IOException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        catch (ListIsEmptyException e){
+            return ResponseEntity.badRequest().body("Não há produtos cadastrados no sistema.");
         }
 
     }
