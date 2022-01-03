@@ -26,11 +26,14 @@ public class ProductRepository {
 
     private final List<ProductEntity> productList = new ArrayList<>();
     private final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-    private final String PATH = "products.json";
+    private final String PATH = "src/main/resources/products.json";
+
 
     public List<ProductEntity> listAll() throws IOException, ListIsEmptyException {
         try {
-            List<ProductEntity> listAll = Arrays.stream(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class))
+            List<ProductEntity> listAll =
+                    Arrays.stream(mapper.readValue(Paths.get(this.PATH)
+                            .toFile(), ProductEntity[].class))
                     .filter(p -> p.getQuantity() > 0).collect(Collectors.toList());
             return listAll;
         } catch (MismatchedInputException e) {
@@ -39,7 +42,7 @@ public class ProductRepository {
     }
 
     public ProductEntity findOneById(Long productId) throws IOException {
-        return Arrays.stream(mapper.readValue(Paths.get("products.json").toFile(), ProductEntity[].class))
+        return Arrays.stream(mapper.readValue(Paths.get(this.PATH).toFile(), ProductEntity[].class))
                 .filter(p -> p.getProductId().equals(productId)).findFirst().orElse(new ProductEntity());
     }
 
@@ -56,7 +59,7 @@ public class ProductRepository {
             productList.add(productEntity);
         }
 
-        mapper.writeValue(new File(PATH), productList);
+        mapper.writeValue(new File(this.PATH), productList);
     }
 
     public void saveAll(List<ProductEntity> products) throws IOException {
@@ -66,15 +69,15 @@ public class ProductRepository {
             product.setProductId(lastId + counter++);
             productList.add(product);
         }
-        mapper.writeValue(new File(PATH), productList);
+        mapper.writeValue(new File(this.PATH), productList);
     }
 
     public void removeById(Long productId) throws IOException {
-        List<ProductEntity> productListAll = Arrays.asList(mapper.readValue(Paths.get("products.json")
+        List<ProductEntity> productListAll = Arrays.asList(mapper.readValue(Paths.get(this.PATH)
                 .toFile(), ProductEntity[].class));
         ProductEntity productEntity = findOneById(productId);
         productListAll.remove(productEntity);
-        mapper.writeValue(new File(PATH), productListAll);
+        mapper.writeValue(new File(this.PATH), productListAll);
     }
 
     public List<ProductEntity> sortByAscName(List<ProductEntity> listProducts) throws IOException{
