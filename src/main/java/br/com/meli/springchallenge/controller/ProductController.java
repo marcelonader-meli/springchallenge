@@ -13,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -77,16 +79,24 @@ public class ProductController {
     }
 
     @PostMapping("/purchase-request")
-    public ResponseEntity<TicketDTO> buyProduct(@RequestBody ShoppingCartEntity shoppingCart) throws Exception {
+    public ResponseEntity<?> buyProduct(@RequestBody ShoppingCartEntity shoppingCart) throws Exception {
         try {
-            return ResponseEntity.ok(this.productService.buyProduct(shoppingCart));
+            TicketDTO ticketDTO = this.productService.buyProduct(shoppingCart);
+            if(ticketDTO.getObservacoes().equals("")){
+                return ResponseEntity.ok(ticketDTO);
+            }else{
+
+                Map<String, Object> map = new HashMap<>();
+
+                map.put("message", "Não foi possivel adicionar todos os itens ao carrinho, verifique as observacoes no ticket");
+                map.put("Ticket",ticketDTO);
+
+                return ResponseEntity.ok().body(map);
+            }
+
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }
-
-        //if(observacoes.equals("")){
-        //    throw new Exception(" Não foi possivel adicionar todos os itens ao carrinho, verifique as observacoes no ticket");
-        //}
     }
 
 
