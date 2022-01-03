@@ -162,10 +162,10 @@ public class ProductService {
                                     .build()
                     );
                 }else{
-                    observacoes.append("Quantidade do item " + productEntity.getName() + " Nao disponivel | ");
+                    observacoes.append("| Quantidade do item " + productEntity.getName() + " não disponível ");
                 }
             }else{
-                observacoes.append("Produto" + articlesPurchaseEntity.getName() + "nao existente");
+                observacoes.append("Produto " + articlesPurchaseEntity.getName() + " não existente");
             }
         }
 
