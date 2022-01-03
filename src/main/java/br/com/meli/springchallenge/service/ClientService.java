@@ -44,4 +44,8 @@ public class ClientService {
         return clientRepository.listAllByState(uf);
     }
 
+    public List<ClientEntity> listAll() throws IOException, ListIsEmptyException {
+        return clientRepository.listAll();
+    }
+
 }

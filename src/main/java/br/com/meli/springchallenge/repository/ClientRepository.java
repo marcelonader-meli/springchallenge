@@ -1,7 +1,6 @@
 package br.com.meli.springchallenge.repository;
 
 import br.com.meli.springchallenge.entity.ClientEntity;
-import br.com.meli.springchallenge.entity.ProductEntity;
 import br.com.meli.springchallenge.exceptions.ExistingClientException;
 import br.com.meli.springchallenge.exceptions.ListIsEmptyException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +23,17 @@ public class ClientRepository {
     private final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     private final String PATH = "src/main/resources/clients.json";
 
+    public List<ClientEntity> listAll() throws IOException, ListIsEmptyException {
+        try {
+            List<ClientEntity> listAll =
+                    Arrays.stream(mapper.readValue(Paths.get(this.PATH).toFile(), ClientEntity[].class))
+                            .collect(Collectors.toList());
+            return listAll;
+        } catch (MismatchedInputException e) {
+            throw new ListIsEmptyException();
+        }
+    }
+
     public List<ClientEntity> listAllByState(String uf) throws IOException, ListIsEmptyException {
         try {
             List<ClientEntity> listAllByState = Arrays.stream(mapper.readValue(Paths.get(this.PATH).toFile(), ClientEntity[].class))
@@ -33,7 +43,6 @@ public class ClientRepository {
             throw new ListIsEmptyException();
         }
     }
-
 
     public ClientEntity findOneById(Long clientId) throws IOException {
         return Arrays.stream(mapper.readValue(Paths.get(this.PATH).toFile(), ClientEntity[].class))
