@@ -28,9 +28,9 @@ public class ClientController {
     ClientService clientService;
 
     @GetMapping("/")
-    public ResponseEntity<?> listAllByState(@RequestParam(required = true) String state) throws IOException {
+    public ResponseEntity<?> listAllByState(@RequestParam(required = true) String uf) throws IOException {
         try{
-            return ResponseEntity.ok(clientService.listAllByState(state).stream().map(ClientDTO::convert).collect(Collectors.toList()));
+            return ResponseEntity.ok(clientService.listAllByState(uf));
         } catch (IOException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

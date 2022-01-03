@@ -40,8 +40,8 @@ public class ClientService {
         clientRepository.save(clientEntity);
     }
 
-    public List<ClientEntity> listAllByState(String state) throws IOException, ListIsEmptyException {
-        return clientRepository.listAllByState(state);
+    public List<ClientEntity> listAllByState(String uf) throws IOException, ListIsEmptyException {
+        return clientRepository.listAllByState(uf);
     }
 
 }

@@ -24,10 +24,10 @@ public class ClientRepository {
     private final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     private final String PATH = "src/main/resources/clients.json";
 
-    public List<ClientEntity> listAllByState(String state) throws IOException, ListIsEmptyException {
+    public List<ClientEntity> listAllByState(String uf) throws IOException, ListIsEmptyException {
         try {
             List<ClientEntity> listAllByState = Arrays.stream(mapper.readValue(Paths.get(this.PATH).toFile(), ClientEntity[].class))
-                    .filter(c -> c.getUf().equals(state)).collect(Collectors.toList());
+                    .filter(c -> c.getUf().equals(uf)).collect(Collectors.toList());
             return listAllByState;
         } catch (MismatchedInputException e){
             throw new ListIsEmptyException();
