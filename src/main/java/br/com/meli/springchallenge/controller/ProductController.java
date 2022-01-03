@@ -1,6 +1,5 @@
 package br.com.meli.springchallenge.controller;
 
-import br.com.meli.springchallenge.DTO.ProductCreateDTO;
 import br.com.meli.springchallenge.DTO.ProductDTO;
 import br.com.meli.springchallenge.DTO.TicketDTO;
 import br.com.meli.springchallenge.entity.ProductEntity;
