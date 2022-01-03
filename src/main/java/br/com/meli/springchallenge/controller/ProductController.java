@@ -101,11 +101,15 @@ public class ProductController {
 
 
     @PostMapping("/insert-articles-request")
-    public ResponseEntity<List<ProductCreateDTO>> saveProducts(@RequestBody List<ProductEntity> listProducts) {
+    public ResponseEntity<?> saveProducts(@RequestBody List<ProductEntity> listProducts) throws IOException{
         try {
-            return ResponseEntity.ok().body(productService.saveProducts(listProducts));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
+            if (listProducts.size() > 0){
+                return ResponseEntity.ok().body(productService.saveProducts(listProducts));
+            } else {
+                return ResponseEntity.badRequest().body("Por favor, informe os produtos a serem cadastrados!");
+            }
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 

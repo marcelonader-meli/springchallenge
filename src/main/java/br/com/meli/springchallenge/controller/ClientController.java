@@ -27,6 +27,22 @@ public class ClientController {
     @Autowired
     ClientService clientService;
 
+    @GetMapping("/")
+    public ResponseEntity<?> listAllByState(@RequestParam(required = true) String uf) throws IOException {
+        try{
+            if (uf != ""){
+
+                return ResponseEntity.ok(clientService.listAllByState(uf));
+            } else{
+                return ResponseEntity.badRequest().body("É necessario informar qual o estado que você quer buscar!");
+            }
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        catch (ListIsEmptyException e){
+            return ResponseEntity.badRequest().body("Não há clientes cadastrados no sistema.");
+        }
+    }
 
     @PostMapping("/register")
     public ResponseEntity<ClientDTO> registerClient(@RequestBody ClientEntity clientEntity) throws IOException, IncompleteDataException, ExistingClientException {
