@@ -2,6 +2,7 @@ package br.com.meli.springchallenge.controller;
 
 import br.com.meli.springchallenge.DTO.ClientDTO;
 import br.com.meli.springchallenge.DTO.ProductCreateDTO;
+import br.com.meli.springchallenge.DTO.ProductDTO;
 import br.com.meli.springchallenge.DTO.TicketDTO;
 import br.com.meli.springchallenge.entity.ClientEntity;
 import br.com.meli.springchallenge.entity.ProductEntity;
@@ -27,14 +28,26 @@ public class ClientController {
     @Autowired
     ClientService clientService;
 
+    @GetMapping("/list")
+    public ResponseEntity<?> listAll() throws IOException {
+        try {
+            return ResponseEntity.ok(clientService.listAll());
+        }
+        catch (IOException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        catch (ListIsEmptyException e){
+            return ResponseEntity.badRequest().body("Não há clientes cadastrados no sistema.");
+        }
+    }
+
     @GetMapping("/")
     public ResponseEntity<?> listAllByState(@RequestParam(required = true) String uf) throws IOException {
         try{
             if (uf != ""){
-
                 return ResponseEntity.ok(clientService.listAllByState(uf));
             } else{
-                return ResponseEntity.badRequest().body("É necessario informar qual o estado que você quer buscar!");
+                return ResponseEntity.badRequest().body("É necessario informar qual o estado que você deseja buscar!");
             }
         } catch (IOException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
