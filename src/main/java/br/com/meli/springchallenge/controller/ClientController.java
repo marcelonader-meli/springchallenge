@@ -30,7 +30,12 @@ public class ClientController {
     @GetMapping("/")
     public ResponseEntity<?> listAllByState(@RequestParam(required = true) String uf) throws IOException {
         try{
-            return ResponseEntity.ok(clientService.listAllByState(uf));
+            if (uf != ""){
+
+                return ResponseEntity.ok(clientService.listAllByState(uf));
+            } else{
+                return ResponseEntity.badRequest().body("É necessario informar qual o estado que você quer buscar!");
+            }
         } catch (IOException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

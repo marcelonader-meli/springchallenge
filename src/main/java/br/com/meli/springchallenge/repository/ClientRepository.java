@@ -27,7 +27,7 @@ public class ClientRepository {
     public List<ClientEntity> listAllByState(String uf) throws IOException, ListIsEmptyException {
         try {
             List<ClientEntity> listAllByState = Arrays.stream(mapper.readValue(Paths.get(this.PATH).toFile(), ClientEntity[].class))
-                    .filter(c -> c.getUf().equals(uf)).collect(Collectors.toList());
+                    .filter(c -> c.getUf().equalsIgnoreCase(uf)).collect(Collectors.toList());
             return listAllByState;
         } catch (MismatchedInputException e){
             throw new ListIsEmptyException();
