@@ -1,9 +1,8 @@
 package br.com.meli.springchallenge.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+import nonapi.io.github.classgraph.json.Id;
 
 import java.math.BigDecimal;
 
@@ -11,7 +10,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductEntity  implements Comparable<ProductEntity> {
+public class ProductEntity {
 
     private Long productId;
     private String name;
@@ -22,8 +21,5 @@ public class ProductEntity  implements Comparable<ProductEntity> {
     private Boolean freeShipping;
     private String prestige;
 
-    @Override
-    public int compareTo(ProductEntity productEntity) {
-        return this.name.compareTo(productEntity.getName());
-    }
+
 }
