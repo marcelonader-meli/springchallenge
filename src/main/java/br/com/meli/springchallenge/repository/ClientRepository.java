@@ -3,9 +3,10 @@ package br.com.meli.springchallenge.repository;
 import br.com.meli.springchallenge.entity.ClientEntity;
 import br.com.meli.springchallenge.entity.ProductEntity;
 import br.com.meli.springchallenge.exceptions.ExistingClientException;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import br.com.meli.springchallenge.exceptions.ListIsEmptyException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
@@ -23,6 +24,17 @@ public class ClientRepository {
     private final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     private final String PATH = "src/main/resources/clients.json";
 
+    public List<ClientEntity> listAllByState(String state) throws IOException, ListIsEmptyException {
+        try {
+            List<ClientEntity> listAllByState = Arrays.stream(mapper.readValue(Paths.get(this.PATH).toFile(), ClientEntity[].class))
+                    .filter(c -> c.getUf().equals(state)).collect(Collectors.toList());
+            return listAllByState;
+        } catch (MismatchedInputException e){
+            throw new ListIsEmptyException();
+        }
+    }
+
+
     public ClientEntity findOneById(Long clientId) throws IOException {
         return Arrays.stream(mapper.readValue(Paths.get(this.PATH).toFile(), ClientEntity[].class))
                 .filter(p -> p.getClientId().equals(clientId)).findFirst().orElse(new ClientEntity());
@@ -32,7 +44,7 @@ public class ClientRepository {
         this.createFile();
         clientEntity.setClientId((long) clientList.size()+1);
         clientList.add(clientEntity);
-
+        mapper.writeValue(new File(PATH), clientList);
     }
 
     public ClientEntity findOneByNameAndEmail(String name, String email) throws IOException, ExistingClientException {
